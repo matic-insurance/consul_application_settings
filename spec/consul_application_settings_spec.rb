@@ -25,4 +25,13 @@ RSpec.describe ConsulApplicationSettings do
       expect { configure_settings('flat_structure.yml') }.to_not raise_error
     end
   end
+
+  describe '.get' do
+    let(:settings) { described_class.get }
+    before { configure_settings('flat_structure.yml') }
+
+    it 'return default value' do
+      expect(settings.application).to eq("FlatStructure")
+    end
+  end
 end
