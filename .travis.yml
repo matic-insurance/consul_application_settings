@@ -2,6 +2,42 @@
 sudo: false
 language: ruby
 cache: bundler
+
 rvm:
   - 2.5.1
-before_install: gem install bundler -v 2.0.1
+
+env:
+  - CONSUL_VERSION=1.4.4
+
+before_install:
+  # Install bundler 2.x
+  - gem update --system
+  - gem install bundler
+  # Install Code Climate
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+  # Install consul
+  - curl -sLo consul.zip https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip
+  - unzip "consul.zip"
+  - ./consul --version
+
+install:
+  - bin/setup
+
+before_script:
+  # Run consul
+  - ./consul agent -dev -node travis &
+
+script:
+  - bundle exec rspec
+  - gem build consul_application_settings
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
+deploy:
+  provider: rubygems
+  api_key: "$RUBY_GEMS_API_KEY"
+  on:
+    tags: true

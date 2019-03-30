@@ -1,8 +1,27 @@
 # ConsulApplicationSettings
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/consul_application_settings`. To experiment with that code, run `bin/console` for an interactive prompt.
+[![Build Status](https://travis-ci.org/matic-insurance/consul_application_settings.svg?branch=master)](https://travis-ci.org/matic-insurance/consul_application_settings)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/b0eaebcf83898535ea4e/test_coverage)](https://codeclimate.com/github/matic-insurance/consul_application_settings/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/b0eaebcf83898535ea4e/maintainability)](https://codeclimate.com/github/matic-insurance/consul_application_settings/maintainability)
 
-TODO: Delete this and the text above, and describe your gem
+Gem that simplifies usage of Consul (via [Diplomat gem](https://github.com/WeAreFarmGeek/diplomat)) 
+to host application settings. Gem provides defaults via yaml files and other utilities 
+to simplify storage and control of application with Consul KV storage.
+
+Gem is trying to solve a problem of distributing application settings for local development environment and provide defaults 
+in production before custom value is set inside of consul. 
+
+Example use cases:
+
+- One engineer has created a new feature that depend on consul key/value. 
+  
+  How enginner can notify other engineers that they need to set this value in their consul environments?
+
+- DevOps team responsible to configure and maintain deployment. 
+
+  How do they learn (have reference) of what settings and structure application expect? 
+
+Gem reads any particular setting from consul and if it is missing tries to find value in YAML defaults file
 
 ## Installation
 
@@ -12,13 +31,6 @@ Add this line to your application's Gemfile:
 gem 'consul_application_settings'
 ```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install consul_application_settings
 
 ## Usage
 
@@ -26,13 +38,21 @@ TODO: Write usage instructions here
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+## Development
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+1. [Install Consul](https://www.consul.io/docs/install/index.html)
+1. Run `bin/setup` to install dependencies
+1. Run tests `rspec`
+1. Add new test
+1. Add new code
+1. Go to step 3
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/consul_application_settings. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/matic-insurance/consul_application_settings. 
+This project is intended to be a safe, welcoming space for collaboration, 
+and contributors are expected to adhere to the 
+[Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -40,4 +60,5 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the ConsulApplicationSettings project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/consul_application_settings/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the ConsulApplicationSettings project’s codebases, issue trackers, 
+chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/consul_application_settings/blob/master/CODE_OF_CONDUCT.md).
