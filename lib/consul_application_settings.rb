@@ -1,5 +1,6 @@
 require "consul_application_settings/version"
 require "consul_application_settings/configuration"
+require "consul_application_settings/defaults"
 require "diplomat"
 
 module ConsulApplicationSettings
@@ -7,6 +8,7 @@ module ConsulApplicationSettings
 
   class << self
     attr_accessor :configuration
+    attr_accessor :defaults
   end
 
   self.configuration ||= ConsulApplicationSettings::Configuration.new
@@ -14,6 +16,7 @@ module ConsulApplicationSettings
   class << self
     def configure
       yield(configuration)
+      self.defaults = ConsulApplicationSettings::Defaults.read(configuration.defaults_path)
     end
 
     def get_from(path)

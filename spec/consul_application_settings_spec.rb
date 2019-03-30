@@ -11,4 +11,18 @@ RSpec.describe ConsulApplicationSettings do
     Diplomat::Kv.put('foo', 'bar')
     expect(Diplomat::Kv.get('foo')).to eq('bar')
   end
+
+  describe '.configure' do
+    it 'fails when defaults file missing' do
+      expect { configure_settings('missing_file.yml') }.to raise_error(ConsulApplicationSettings::Error)
+    end
+
+    it 'fails when defaults is not YAML' do
+      expect { configure_settings('invalid_syntax.yml') }.to raise_error(ConsulApplicationSettings::Error)
+    end
+
+    it 'reads YAML' do
+      expect { configure_settings('flat_structure.yml') }.to_not raise_error
+    end
+  end
 end
