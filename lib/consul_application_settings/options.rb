@@ -8,7 +8,12 @@ module ConsulApplicationSettings
     end
 
     def method_missing(name, *args)
-      defaults.get(name)
+      consul_value = Diplomat::Kv.get(name.to_s, {}, :return)
+      if consul_value.empty?
+        defaults.get(name)
+      else
+        consul_value
+      end
     end
   end
 end

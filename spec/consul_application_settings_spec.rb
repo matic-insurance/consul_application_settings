@@ -31,7 +31,12 @@ RSpec.describe ConsulApplicationSettings do
     before { configure_settings('flat_structure.yml') }
 
     it 'return default value' do
-      expect(settings.application).to eq("FlatStructure")
+      expect(settings.application).to eq('FlatStructure')
+    end
+
+    it 'returns consul value' do
+      set_custom_value("application", 'ConsulSettings')
+      expect(settings.application).to eq('ConsulSettings')
     end
   end
 end
