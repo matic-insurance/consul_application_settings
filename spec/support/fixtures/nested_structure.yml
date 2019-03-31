@@ -1,0 +1,12 @@
+application:
+  name: "NestedStructure"
+  enabled: true
+  services:
+    consul:
+      domain: localhost
+collection:
+  - a
+  - b
+  - c
+instances: 4
+secret: 'super secret'

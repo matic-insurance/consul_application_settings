@@ -3,12 +3,12 @@ RSpec.describe ConsulApplicationSettings do
     expect(ConsulApplicationSettings::VERSION).not_to be nil
   end
 
-  it "has get method" do
-    expect(ConsulApplicationSettings).to respond_to(:get_from)
+  it "has load method" do
+    expect(ConsulApplicationSettings).to respond_to(:load)
   end
 
   it "has connection to consul" do
-    Diplomat::Kv.put('foo', 'bar')
+    set_custom_value('foo', 'bar')
     expect(Diplomat::Kv.get('foo')).to eq('bar')
   end
 
@@ -26,8 +26,8 @@ RSpec.describe ConsulApplicationSettings do
     end
   end
 
-  describe '.get' do
-    let(:settings) { described_class.get }
+  describe '.load' do
+    let(:settings) { described_class.load }
     before { configure_settings('flat_structure') }
 
     it 'return default value' do
@@ -37,6 +37,20 @@ RSpec.describe ConsulApplicationSettings do
     it 'returns consul value' do
       set_custom_value("application", 'ConsulSettings')
       expect(settings.application).to eq('ConsulSettings')
+    end
+  end
+
+  describe '.load_from' do
+    let(:settings) { described_class.load_from('application') }
+    before { configure_settings('nested_structure') }
+
+    it 'return default value' do
+      expect(settings.name).to eq('NestedStructure')
+    end
+
+    it 'returns consul value' do
+      set_custom_value("application/name", 'ConsulSettings')
+      expect(settings.name).to eq('ConsulSettings')
     end
   end
 end
