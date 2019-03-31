@@ -39,4 +39,18 @@ RSpec.describe ConsulApplicationSettings do
       expect(settings.application).to eq('ConsulSettings')
     end
   end
+
+  describe '.get_from' do
+    let(:settings) { described_class.get_from('application') }
+    before { configure_settings('nested_structure') }
+
+    it 'return default value' do
+      expect(settings.name).to eq('NestedStructure')
+    end
+
+    it 'returns consul value' do
+      set_custom_value("application/name", 'ConsulSettings')
+      expect(settings.name).to eq('ConsulSettings')
+    end
+  end
 end

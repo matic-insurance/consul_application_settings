@@ -1,0 +1,8 @@
+application:
+  name: "NestedStructure"
+  enabled: true
+collection:
+  - a
+  - b
+  - c
+instances: 4
