@@ -14,7 +14,7 @@ module ConsulApplicationSettings
       if consul_value.nil? || consul_value.empty?
         defaults.get(name)
       else
-        cast_value(consul_value)
+        ConsulApplicationSettings::Utils.cast_consul_value(consul_value)
       end
     end
 
@@ -30,17 +30,6 @@ module ConsulApplicationSettings
 
     def key_path(name)
       "#{path}/#{name.to_s}"
-    end
-
-    def cast_value(v)
-      case v
-      when 'false'
-        false
-      when 'true'
-        true
-      else
-        Integer(v) rescue Float(v) rescue JSON.parse(v) rescue v
-      end
     end
   end
 end
