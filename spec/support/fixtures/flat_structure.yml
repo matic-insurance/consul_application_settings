@@ -1,0 +1,7 @@
+application: "FlatStructure"
+collection:
+  - a
+  - b
+  - c
+enabled: true
+instances: 4

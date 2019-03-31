@@ -30,7 +30,7 @@ before_script:
   - ./consul agent -dev -node travis &
 
 script:
-  - bundle exec rspec
+  - COVERAGE=true bundle exec rspec
   - gem build consul_application_settings
 
 after_script:
