@@ -2,6 +2,7 @@ require "consul_application_settings/version"
 require "consul_application_settings/configuration"
 require "consul_application_settings/defaults"
 require "consul_application_settings/options"
+require "consul_application_settings/utils"
 require "diplomat"
 
 module ConsulApplicationSettings

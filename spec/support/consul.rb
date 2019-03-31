@@ -11,5 +11,6 @@ end
 
 def set_custom_value(path, value)
   $consul_keys_to_clear << path
-  Diplomat::Kv.put(path, value)
+  serialized_value = value.is_a?(String) ? value : value.to_json
+  Diplomat::Kv.put(path, serialized_value)
 end

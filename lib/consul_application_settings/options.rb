@@ -1,3 +1,5 @@
+require 'json'
+
 module ConsulApplicationSettings
   class Options
     attr_reader :path, :defaults
@@ -9,10 +11,10 @@ module ConsulApplicationSettings
 
     def get(name)
       consul_value = Diplomat::Kv.get(key_path(name), {}, :return)
-      if consul_value.empty?
+      if consul_value.nil? || consul_value.empty?
         defaults.get(name)
       else
-        consul_value
+        ConsulApplicationSettings::Utils.cast_consul_value(consul_value)
       end
     end
 

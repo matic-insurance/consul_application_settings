@@ -1,11 +1,10 @@
 RSpec.describe ConsulApplicationSettings::Options do
+  let(:path) { '' }
   let(:defaults) { ConsulApplicationSettings::Defaults.read(defaults_fixture_path('nested_structure')) }
   let(:options) { described_class.new(path, defaults) }
 
   describe 'config values location' do
     context 'root level' do
-      let(:path) { '' }
-
       it 'returns value from defaults' do
         expect(options.get('secret')).to eq('super secret')
       end
@@ -101,6 +100,59 @@ RSpec.describe ConsulApplicationSettings::Options do
       it 'returns value from consul' do
         set_custom_value('application/name', 'CustomApp')
         expect(options.name).to eq('CustomApp')
+      end
+    end
+  end
+
+  describe 'type casting' do
+    let(:defaults) { ConsulApplicationSettings::Defaults.read(defaults_fixture_path('flat_structure')) }
+
+    context 'for defaults' do
+      it 'returns string valye' do
+        expect(options.get(:application)).to eq('FlatStructure')
+      end
+
+      it 'returns list values' do
+        expect(options.get(:collection)).to eq(%w(a b c))
+      end
+
+      it 'returns boolean values' do
+        expect(options.get(:enabled)).to eq(true)
+      end
+
+      it 'returns integer values' do
+        expect(options.get(:instances)).to eq(4)
+      end
+
+      it 'returns float values' do
+        expect(options.get(:tracking_coefficient)).to eq(0.5)
+      end
+    end
+
+    context 'for consul' do
+      it 'returns string valye' do
+        set_custom_value('application', 'CustomApp')
+        expect(options.get(:application)).to eq('CustomApp')
+      end
+
+      it 'returns list values' do
+        set_custom_value('collection', %w(d e f))
+        expect(options.get(:collection)).to eq(%w(d e f))
+      end
+
+      it 'returns boolean values' do
+        set_custom_value('enabled', false)
+        expect(options.get(:enabled)).to eq(false)
+      end
+
+      it 'returns integer values' do
+        set_custom_value('instances', 5)
+        expect(options.get(:instances)).to eq(5)
+      end
+
+      it 'returns float values' do
+        set_custom_value('tracking_coefficient', 0.3)
+        expect(options.get(:tracking_coefficient)).to eq(0.3)
       end
     end
   end
