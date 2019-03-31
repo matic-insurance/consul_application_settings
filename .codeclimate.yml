@@ -2,5 +2,7 @@ version: 2
 plugins:
   git-legal:
     enabled: true
+  rubocop:
+    enabled: true
 exclude_patterns:
   - "spec/"
