@@ -14,21 +14,21 @@ RSpec.describe ConsulApplicationSettings do
 
   describe '.configure' do
     it 'fails when defaults file missing' do
-      expect { configure_settings('missing_file.yml') }.to raise_error(ConsulApplicationSettings::Error)
+      expect { configure_settings('missing_file') }.to raise_error(ConsulApplicationSettings::Error)
     end
 
     it 'fails when defaults is not YAML' do
-      expect { configure_settings('invalid_syntax.yml') }.to raise_error(ConsulApplicationSettings::Error)
+      expect { configure_settings('invalid_syntax') }.to raise_error(ConsulApplicationSettings::Error)
     end
 
     it 'reads YAML' do
-      expect { configure_settings('flat_structure.yml') }.to_not raise_error
+      expect { configure_settings('flat_structure') }.to_not raise_error
     end
   end
 
   describe '.get' do
     let(:settings) { described_class.get }
-    before { configure_settings('flat_structure.yml') }
+    before { configure_settings('flat_structure') }
 
     it 'return default value' do
       expect(settings.application).to eq('FlatStructure')
