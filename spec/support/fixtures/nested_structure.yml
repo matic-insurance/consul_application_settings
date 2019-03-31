@@ -9,4 +9,5 @@ collection:
   - b
   - c
 instances: 4
+tracking_coefficient: 0.5
 secret: 'super secret'
