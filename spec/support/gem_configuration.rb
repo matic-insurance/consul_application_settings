@@ -1,6 +1,7 @@
-def configure_settings(defaults_fixture)
+def configure_settings(defaults_fixture, &block)
   ConsulApplicationSettings.configure do |config|
-    config.defaults_path = File.expand_path(defaults_fixture_path(defaults_fixture), __FILE__)
+    config.defaults_path = defaults_fixture_path(defaults_fixture)
+    yield(config) if block
   end
 end
 

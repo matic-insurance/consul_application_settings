@@ -13,7 +13,7 @@ module ConsulApplicationSettings
     end
 
     def load_from(path)
-      keys = path.split('/')
+      keys = ConsulApplicationSettings::Utils.decompose_path(path)
       new_defaults = keys.reduce(contents) { |hash, key| read_value(key, hash, {}) }
       self.class.new(new_defaults)
     end

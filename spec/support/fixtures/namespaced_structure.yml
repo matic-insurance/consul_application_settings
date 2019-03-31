@@ -1,0 +1,11 @@
+staging:
+  app1:
+    application: "app1"
+    enabled: true
+  app2:
+    application: "app2"
+    enabled: false
+uat:
+  app2:
+    application: "app2"
+    enabled: true
