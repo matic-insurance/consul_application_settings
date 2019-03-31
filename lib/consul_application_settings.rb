@@ -20,12 +20,12 @@ module ConsulApplicationSettings
       self.defaults = ConsulApplicationSettings::Defaults.read(config.defaults_path)
     end
 
-    def get_from(path)
+    def load_from(path)
       ConsulApplicationSettings::Options.new(path, defaults.load_from(path))
     end
 
-    def get
-      get_from('')
+    def load
+      load_from('')
     end
   end
 end
