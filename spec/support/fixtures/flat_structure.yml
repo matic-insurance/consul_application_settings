@@ -5,3 +5,4 @@ collection:
   - c
 enabled: true
 instances: 4
+secret: 'super secret'

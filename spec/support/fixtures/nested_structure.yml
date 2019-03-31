@@ -9,3 +9,4 @@ collection:
   - b
   - c
 instances: 4
+secret: 'super secret'
