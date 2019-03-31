@@ -7,6 +7,10 @@ module ConsulApplicationSettings
       cast_complex_value(v) rescue v
     end
 
+    def self.generate_path(*parts)
+      parts.select { |p| !p.empty? }.join('/')
+    end
+
     protected
 
     def self.cast_complex_value(v)

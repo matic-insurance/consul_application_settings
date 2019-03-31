@@ -22,7 +22,8 @@ module ConsulApplicationSettings
     end
 
     def load_from(path)
-      ConsulApplicationSettings::Options.new(path, defaults)
+      settings_path = ConsulApplicationSettings::Utils.generate_path(config.namespace, path)
+      ConsulApplicationSettings::Options.new(settings_path, defaults)
     end
 
     def load
