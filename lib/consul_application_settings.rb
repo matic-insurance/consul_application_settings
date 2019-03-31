@@ -21,7 +21,7 @@ module ConsulApplicationSettings
     end
 
     def get_from(path)
-      ConsulApplicationSettings::Options.new(path, defaults.get_from(path))
+      ConsulApplicationSettings::Options.new(path, defaults.load_from(path))
     end
 
     def get

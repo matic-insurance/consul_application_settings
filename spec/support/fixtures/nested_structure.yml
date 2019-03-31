@@ -1,6 +1,9 @@
 application:
   name: "NestedStructure"
   enabled: true
+  services:
+    consul:
+      domain: localhost
 collection:
   - a
   - b
