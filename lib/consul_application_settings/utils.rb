@@ -1,5 +1,7 @@
 module ConsulApplicationSettings
   module Utils
+    SEPARATOR = '/'.freeze
+
     def self.cast_consul_value(v)
       return false if v == 'false'
       return true if v == 'true'
@@ -8,7 +10,10 @@ module ConsulApplicationSettings
     end
 
     def self.generate_path(*parts)
-      parts.select { |p| !p.empty? }.join('/')
+      strings = parts.map(&:to_s)
+      all_parts = strings.map { |s| s.split(SEPARATOR) }.flatten
+      non_empty_parts = all_parts.select { |p| !p.empty? }
+      non_empty_parts.join('/')
     end
 
     protected
