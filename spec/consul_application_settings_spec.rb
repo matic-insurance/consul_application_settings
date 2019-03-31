@@ -52,6 +52,11 @@ RSpec.describe ConsulApplicationSettings do
       set_custom_value("application/name", 'ConsulSettings')
       expect(settings.name).to eq('ConsulSettings')
     end
+
+    it 'normalizes path' do
+      settings = described_class.load_from('/application/services//consul/')
+      expect(settings.domain).to eq('localhost')
+    end
   end
 
   describe 'namespaces' do

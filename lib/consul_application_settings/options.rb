@@ -9,6 +9,11 @@ module ConsulApplicationSettings
       @defaults = defaults.load_from(path)
     end
 
+    def load_from(new_path)
+      full_path = ConsulApplicationSettings::Utils.generate_path(path, new_path)
+      self.class.new(full_path, defaults)
+    end
+
     def get(name)
       consul_value = Diplomat::Kv.get(key_path(name), {}, :return)
       if consul_value.nil? || consul_value.empty?

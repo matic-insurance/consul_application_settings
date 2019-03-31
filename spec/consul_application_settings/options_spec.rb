@@ -156,4 +156,34 @@ RSpec.describe ConsulApplicationSettings::Options do
       end
     end
   end
+
+  describe '.load_from' do
+    let(:new_options) { options.load_from('application/services/consul') }
+
+    it 'returns options object' do
+      expect(new_options).to be_instance_of(described_class)
+    end
+
+    it 'returns new copy of options' do
+      expect(new_options).to_not eq(options)
+    end
+
+    it 'returns options with new path' do
+      expect(new_options.path).to eq('application/services/consul')
+    end
+
+    it 'returns value from defaults' do
+      expect(new_options.get('domain')).to eq('localhost')
+    end
+
+    it 'returns value from consul' do
+      set_custom_value('application/services/consul/domain', 'consul.com')
+      expect(new_options.get('domain')).to eq('consul.com')
+    end
+
+    it 'normalizes path' do
+      settings = options.load_from('/application/services//consul/')
+      expect(settings.domain).to eq('localhost')
+    end
+  end
 end
