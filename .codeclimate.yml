@@ -1,7 +1,8 @@
 version: 2
 plugins:
-  git-legal:
-    enabled: true
+#  disabled before git-legal supports bundler 2 https://github.com/kmewhort/git.legal-codeclimate/issues/6
+#  git-legal:
+#    enabled: true
   rubocop:
     enabled: true
 exclude_patterns:
