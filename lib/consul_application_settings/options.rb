@@ -29,7 +29,7 @@ module ConsulApplicationSettings
     private
 
     def key_path(name)
-      "#{path}/#{name.to_s}"
+      ConsulApplicationSettings::Utils.generate_path(path, name)
     end
   end
 end

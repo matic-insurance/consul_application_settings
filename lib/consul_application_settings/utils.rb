@@ -16,6 +16,11 @@ module ConsulApplicationSettings
       non_empty_parts.join('/')
     end
 
+    def self.decompose_path(path)
+      parts = path.to_s.split(SEPARATOR).compact
+      parts.select { |p| !p.empty? }
+    end
+
     protected
 
     def self.cast_complex_value(v)
