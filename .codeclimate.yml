@@ -5,6 +5,8 @@ plugins:
 #    enabled: true
   rubocop:
     enabled: true
+  bundler-audit:
+    enabled: true
 exclude_patterns:
   - "spec/"
   - "*.gemspec"
