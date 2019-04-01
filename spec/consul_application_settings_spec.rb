@@ -8,7 +8,7 @@ RSpec.describe ConsulApplicationSettings do
   end
 
   it 'has connection to consul' do
-    set_custom_value('foo', 'bar')
+    set_consul_value('foo', 'bar')
     expect(Diplomat::Kv.get('foo')).to eq('bar')
   end
 
@@ -35,7 +35,7 @@ RSpec.describe ConsulApplicationSettings do
     end
 
     it 'returns consul value' do
-      set_custom_value(:application, 'ConsulSettings')
+      set_consul_value(:application, 'ConsulSettings')
       expect(settings.application).to eq('ConsulSettings')
     end
   end
@@ -49,7 +49,7 @@ RSpec.describe ConsulApplicationSettings do
     end
 
     it 'returns consul value' do
-      set_custom_value('application/name', 'ConsulSettings')
+      set_consul_value('application/name', 'ConsulSettings')
       expect(settings.name).to eq('ConsulSettings')
     end
 
@@ -69,7 +69,7 @@ RSpec.describe ConsulApplicationSettings do
     end
 
     it 'returns consul value' do
-      set_custom_value('staging/app1/application', 'CustomApp')
+      set_consul_value('staging/app1/application', 'CustomApp')
       expect(settings.application).to eq('CustomApp')
     end
   end

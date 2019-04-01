@@ -27,7 +27,3 @@ RSpec.configure do |config|
     clear_consul_values
   end
 end
-
-def set_custom_value(path, value)
-  set_consul_value(path, value)
-end

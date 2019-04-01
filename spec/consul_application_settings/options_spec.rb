@@ -10,7 +10,7 @@ RSpec.describe ConsulApplicationSettings::Options do
       end
 
       it 'returns value from consul' do
-        set_custom_value('secret', 'another secret')
+        set_consul_value('secret', 'another secret')
         expect(options.get('secret')).to eq('another secret')
       end
     end
@@ -23,7 +23,7 @@ RSpec.describe ConsulApplicationSettings::Options do
       end
 
       it 'returns value from consul' do
-        set_custom_value('application/services/consul/domain', 'consul.com')
+        set_consul_value('application/services/consul/domain', 'consul.com')
         expect(options.get('domain')).to eq('consul.com')
       end
     end
@@ -39,7 +39,7 @@ RSpec.describe ConsulApplicationSettings::Options do
         end
 
         it 'returns value from consul' do
-          set_custom_value('application/name', 'CustomApp')
+          set_consul_value('application/name', 'CustomApp')
           expect(options.get('name')).to eq('CustomApp')
         end
       end
@@ -50,7 +50,7 @@ RSpec.describe ConsulApplicationSettings::Options do
         end
 
         it 'returns value from consul' do
-          set_custom_value('application/name', 'CustomApp')
+          set_consul_value('application/name', 'CustomApp')
           expect(options.get(:name)).to eq('CustomApp')
         end
       end
@@ -62,7 +62,7 @@ RSpec.describe ConsulApplicationSettings::Options do
         end
 
         it 'returns value from consul' do
-          set_custom_value('application/services/consul/domain', 'consul.com')
+          set_consul_value('application/services/consul/domain', 'consul.com')
           expect(options.get('services/consul/domain')).to eq('consul.com')
         end
       end
@@ -75,7 +75,7 @@ RSpec.describe ConsulApplicationSettings::Options do
         end
 
         it 'returns value from consul' do
-          set_custom_value('application/name', 'CustomApp')
+          set_consul_value('application/name', 'CustomApp')
           expect(options['name']).to eq('CustomApp')
         end
       end
@@ -86,7 +86,7 @@ RSpec.describe ConsulApplicationSettings::Options do
         end
 
         it 'returns value from consul' do
-          set_custom_value('application/name', 'CustomApp')
+          set_consul_value('application/name', 'CustomApp')
           expect(options[:name]).to eq('CustomApp')
         end
       end
@@ -98,7 +98,7 @@ RSpec.describe ConsulApplicationSettings::Options do
       end
 
       it 'returns value from consul' do
-        set_custom_value('application/name', 'CustomApp')
+        set_consul_value('application/name', 'CustomApp')
         expect(options.name).to eq('CustomApp')
       end
     end
@@ -131,27 +131,27 @@ RSpec.describe ConsulApplicationSettings::Options do
 
     context 'for consul' do
       it 'returns string valye' do
-        set_custom_value('application', 'CustomApp')
+        set_consul_value('application', 'CustomApp')
         expect(options.get(:application)).to eq('CustomApp')
       end
 
       it 'returns list values' do
-        set_custom_value('collection', %w[d e f])
+        set_consul_value('collection', %w[d e f])
         expect(options.get(:collection)).to eq(%w[d e f])
       end
 
       it 'returns boolean values' do
-        set_custom_value('enabled', false)
+        set_consul_value('enabled', false)
         expect(options.get(:enabled)).to eq(false)
       end
 
       it 'returns integer values' do
-        set_custom_value('instances', 5)
+        set_consul_value('instances', 5)
         expect(options.get(:instances)).to eq(5)
       end
 
       it 'returns float values' do
-        set_custom_value('tracking_coefficient', 0.3)
+        set_consul_value('tracking_coefficient', 0.3)
         expect(options.get(:tracking_coefficient)).to eq(0.3)
       end
     end
@@ -177,7 +177,7 @@ RSpec.describe ConsulApplicationSettings::Options do
     end
 
     it 'returns value from consul' do
-      set_custom_value('application/services/consul/domain', 'consul.com')
+      set_consul_value('application/services/consul/domain', 'consul.com')
       expect(new_options.get('domain')).to eq('consul.com')
     end
 
