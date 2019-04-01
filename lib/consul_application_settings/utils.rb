@@ -1,30 +1,38 @@
 module ConsulApplicationSettings
+  # Utility methods to cast values and work with path
   module Utils
     SEPARATOR = '/'.freeze
+    PARSING_CLASSES = [Integer, Float, ->(value) { JSON.parse(value) }].freeze
 
-    def self.cast_consul_value(v)
-      return false if v == 'false'
-      return true if v == 'true'
+    class << self
+      def cast_consul_value(value)
+        return false if value == 'false'
+        return true if value == 'true'
 
-      cast_complex_value(v) rescue v
-    end
+        cast_complex_value(value)
+      end
 
-    def self.generate_path(*parts)
-      strings = parts.map(&:to_s)
-      all_parts = strings.map { |s| s.split(SEPARATOR) }.flatten
-      non_empty_parts = all_parts.select { |p| !p.empty? }
-      non_empty_parts.join('/')
-    end
+      def generate_path(*parts)
+        strings = parts.map(&:to_s)
+        all_parts = strings.map { |s| s.split(SEPARATOR) }.flatten
+        all_parts.reject(&:empty?).join('/')
+      end
 
-    def self.decompose_path(path)
-      parts = path.to_s.split(SEPARATOR).compact
-      parts.select { |p| !p.empty? }
-    end
+      def decompose_path(path)
+        parts = path.to_s.split(SEPARATOR).compact
+        parts.reject(&:empty?)
+      end
 
-    protected
+      protected
 
-    def self.cast_complex_value(v)
-      Integer(v) rescue Float(v) rescue JSON.parse(v)
+      def cast_complex_value(value)
+        PARSING_CLASSES.each do |parser|
+          return parser.call(value)
+        rescue StandardError => _
+          nil
+        end
+        value.to_s
+      end
     end
   end
 end

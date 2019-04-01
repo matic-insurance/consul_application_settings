@@ -1,6 +1,7 @@
 require 'json'
 
 module ConsulApplicationSettings
+  # Reads settings from consul or ask defaults for value
   class Options
     attr_reader :path, :defaults
 
@@ -27,8 +28,14 @@ module ConsulApplicationSettings
       get(name)
     end
 
-    def method_missing(name, *args)
+    # rubocop:disable Style/MethodMissingSuper
+    def method_missing(name, *_args)
       get(name)
+    end
+    # rubocop:enable Style/MethodMissingSuper
+
+    def respond_to_missing?(_name)
+      true
     end
 
     private

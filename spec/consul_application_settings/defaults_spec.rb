@@ -5,15 +5,15 @@ RSpec.describe ConsulApplicationSettings::Defaults do
     let(:path) { defaults_fixture_path('flat_structure') }
 
     it 'returns value' do
-      expect(defaults.get('application')).to eq("FlatStructure")
+      expect(defaults.get('application')).to eq('FlatStructure')
     end
 
     it 'returns value by symbol' do
-      expect(defaults.get(:application)).to eq("FlatStructure")
+      expect(defaults.get(:application)).to eq('FlatStructure')
     end
 
     it 'returns list values' do
-      expect(defaults.get(:collection)).to eq(%w(a b c))
+      expect(defaults.get(:collection)).to eq(%w[a b c])
     end
 
     it 'returns boolean values' do
@@ -30,12 +30,12 @@ RSpec.describe ConsulApplicationSettings::Defaults do
 
     it 'support first level nesting' do
       loaded = defaults.load_from('application')
-      expect(loaded.get('name')).to eq("NestedStructure")
+      expect(loaded.get('name')).to eq('NestedStructure')
     end
 
     it 'support multi level nesting' do
       loaded = defaults.load_from('application/services/consul')
-      expect(loaded.get('domain')).to eq("localhost")
+      expect(loaded.get('domain')).to eq('localhost')
     end
 
     it 'raises error on arrays' do

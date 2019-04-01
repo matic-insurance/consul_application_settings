@@ -1,6 +1,7 @@
 require 'yaml'
 
 module ConsulApplicationSettings
+  # Reading default file from YAML file and providing interface to query them
   class Defaults
     attr_reader :contents
 
@@ -19,9 +20,9 @@ module ConsulApplicationSettings
     end
 
     def self.read(path)
-      new YAML.load(IO.read(path))
-    rescue => e
-      raise ConsulApplicationSettings::Error.new("Cannot read defaults file at #{path}: #{e.message}")
+      new YAML.safe_load(IO.read(path))
+    rescue Psych::SyntaxError, Errno::ENOENT => e
+      raise ConsulApplicationSettings::Error, "Cannot read defaults file at #{path}: #{e.message}"
     end
 
     private

@@ -23,6 +23,8 @@ Example use cases:
 
 Gem reads any particular setting from consul and if it is missing tries to find value in YAML defaults file
 
+**NOTE** Consul is requested every time you query the settings. Defaults YAML file loaded in memory and not changing.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -31,12 +33,95 @@ Add this line to your application's Gemfile:
 gem 'consul_application_settings'
 ```
 
-
 ## Usage
 
-TODO: Write usage instructions here
+### Initialization
 
-## Development
+At the load of application 
+```ruby
+ConsulApplicationSettings.configure do |config|
+  # Specify path to defaults file
+  config.defaults = Rails.root.join('config/settings.yml')
+  # Specify namespace to consul settings
+  config.namespace = 'staging/my_cool_app'
+end
+
+APP_SETTINGS = ConsulApplicationSettings.load
+```
+
+**NOTE** For rails you can add this code to custom initializer `console_application_settings.rb` in `app/config/initializers`
+
+**NOTE** Diplomat gem should be configured before requesting any settings
+
+### Settings structure
+
+Assuming your defaults file in repository `config/settings.yml` looks like:
+```yaml
+app_name: 'MyCoolApp'
+hostname: 'http://localhost:3001'
+
+integrations:
+  database:
+    domain: localhost
+    user: app
+    password: password1234
+  slack:
+    enabled: false
+    webhook_url: 'https://hooks.slack.com/services/XXXXXX/XXXXX/XXXXXXX'
+```
+
+And consul has following settings
+```json
+{
+  "production": {
+    "my_cool_app": {
+     "hostname": "https://mycoolapp.com",
+     "integrations": {
+        "database": {
+          "domain": "194.78.92.19",
+          "password": "*************"
+        },
+        "slack": {
+          "enabled": "true"
+        }
+      }
+    }
+  }
+}
+```
+
+### Query settings via full path
+
+Anywhere in your code base, after initialization, you can use 
+previously loaded settings to query any key by full path
+
+```ruby
+APP_SETTINGS.app_name                           # "MyCoolApp"
+APP_SETTINGS.get(:hostname)                     # "https://mycoolapp.com"
+
+APP_SETTINGS.get('integrations/database/user')  # "app"
+APP_SETTINGS['integrations/slack/enabled']      # true
+```
+
+**NOTE** Gem is pulling settings from consul with namespace but ignores namespace for defaults
+
+### Nested settings
+
+Assuming some part of your code needs to work with smaller part of settings - 
+gem provides interface to avoid duplicating absolute path
+
+```ruby
+# You can load subsettings from root object
+db_settings = APP_SETTINGS.load_from('integrations/database')
+db_settings.domain                  # "194.78.92.19"
+db_settings['user']                 # "app"
+
+# You can load subsettings from subsettings
+integrations_settings = APP_SETTINGS.load_from('integrations')
+slack_settings = integrations_settings.load_from('slack')  
+slack_settings.enabled              # true
+slack_settings.get('webhook_url')   # "https://hooks.slack.com/services/XXXXXX/XXXXX/XXXXXXX"
+``` 
 
 ## Development
 
