@@ -1,10 +1,11 @@
-require "consul_application_settings/version"
-require "consul_application_settings/configuration"
-require "consul_application_settings/defaults"
-require "consul_application_settings/options"
-require "consul_application_settings/utils"
-require "diplomat"
+require 'consul_application_settings/version'
+require 'consul_application_settings/configuration'
+require 'consul_application_settings/defaults'
+require 'consul_application_settings/options'
+require 'consul_application_settings/utils'
+require 'diplomat'
 
+# Main class used to configure defaults file path and load initial settings
 module ConsulApplicationSettings
   class Error < StandardError; end
 

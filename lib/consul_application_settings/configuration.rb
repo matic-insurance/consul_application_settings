@@ -1,4 +1,5 @@
 module ConsulApplicationSettings
+  # All gem configuration settings
   class Configuration
     # Required attributes
     attr_accessor :defaults_path
@@ -6,7 +7,7 @@ module ConsulApplicationSettings
     attr_accessor :namespace
 
     def initialize
-      self.namespace = ""
+      self.namespace = ''
     end
   end
 end

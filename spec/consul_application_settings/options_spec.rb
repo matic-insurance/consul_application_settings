@@ -113,7 +113,7 @@ RSpec.describe ConsulApplicationSettings::Options do
       end
 
       it 'returns list values' do
-        expect(options.get(:collection)).to eq(%w(a b c))
+        expect(options.get(:collection)).to eq(%w[a b c])
       end
 
       it 'returns boolean values' do
@@ -136,8 +136,8 @@ RSpec.describe ConsulApplicationSettings::Options do
       end
 
       it 'returns list values' do
-        set_custom_value('collection', %w(d e f))
-        expect(options.get(:collection)).to eq(%w(d e f))
+        set_custom_value('collection', %w[d e f])
+        expect(options.get(:collection)).to eq(%w[d e f])
       end
 
       it 'returns boolean values' do
