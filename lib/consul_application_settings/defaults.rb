@@ -31,6 +31,8 @@ module ConsulApplicationSettings
       parts = ConsulApplicationSettings::Utils.decompose_path(key)
       result = parts.reduce(hash) { |hash, key| hash.fetch(key.to_s, {}) }
       result == {} ? default : result
+    rescue TypeError => _
+      raise ConsulApplicationSettings::Error, 'reading arrays not implemented'
     end
   end
 end
