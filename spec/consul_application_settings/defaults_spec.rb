@@ -39,7 +39,7 @@ RSpec.describe ConsulApplicationSettings::Defaults do
     end
 
     it 'raises error on arrays' do
-      expect { defaults.load_from('collection/0') }.to raise_error
+      expect { defaults.load_from('collection/0') }.to raise_error(ConsulApplicationSettings::Error)
     end
   end
 end
