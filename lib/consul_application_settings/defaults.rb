@@ -28,7 +28,9 @@ module ConsulApplicationSettings
     private
 
     def read_value(key, hash, default = nil)
-      hash.fetch(key.to_s, default)
+      parts = ConsulApplicationSettings::Utils.decompose_path(key)
+      result = parts.reduce(hash) { |hash, key| hash.fetch(key.to_s, {}) }
+      result == {} ? default : result
     end
   end
 end

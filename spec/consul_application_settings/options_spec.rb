@@ -57,7 +57,6 @@ RSpec.describe ConsulApplicationSettings::Options do
 
       context 'nested key' do
         it 'returns value from defaults' do
-          pending('nested defaults key reading implementation')
           expect(options.get('services/consul/domain')).to eq('localhost')
         end
 
