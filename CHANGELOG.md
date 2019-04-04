@@ -7,5 +7,5 @@
 - Support deep settings search
 - Support nested configs
 
-[Unreleased]: https://github.com/matic-insurance/redis-claim/compare/0.1.0...HEAD
-[0.1.0]: https://github.com/matic-insurance/redis-claim/compare/cb7194f...0.1.0
+[Unreleased]: https://github.com/matic-insurance/consul_application_settings/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/matic-insurance/consul_application_settings/compare/cb7194f...0.1.0
