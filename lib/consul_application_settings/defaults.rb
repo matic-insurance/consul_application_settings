@@ -10,12 +10,12 @@ module ConsulApplicationSettings
     end
 
     def get(name)
-      read_value(name, contents)
+      read_path(name, contents)
     end
 
     def load_from(path)
       keys = ConsulApplicationSettings::Utils.decompose_path(path)
-      new_defaults = keys.reduce(contents) { |hash, key| read_value(key, hash, {}) }
+      new_defaults = keys.reduce(contents) { |hash, key| read_path(key, hash, {}) }
       self.class.new(new_defaults)
     end
 
@@ -27,12 +27,16 @@ module ConsulApplicationSettings
 
     private
 
-    def read_value(key, hash, default = nil)
-      parts = ConsulApplicationSettings::Utils.decompose_path(key)
-      result = parts.reduce(hash) { |hash, key| hash.fetch(key.to_s, {}) }
-      result == {} ? default : result
-    rescue TypeError => _
-      raise ConsulApplicationSettings::Error, 'reading arrays not implemented'
+    def read_path(path, hash, default = nil)
+      parts = ConsulApplicationSettings::Utils.decompose_path(path)
+      result = parts.reduce(hash, &method(:read_value))
+      result || default
+    end
+
+    def read_value(hash, key)
+      raise ConsulApplicationSettings::Error, 'reading arrays not implemented' if hash.is_a? Array
+      return {} if hash.nil?
+      hash.fetch(key.to_s)
     end
   end
 end
