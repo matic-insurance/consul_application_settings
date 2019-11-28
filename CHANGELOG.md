@@ -1,4 +1,5 @@
 ## [Unreleased]
+- Replace CI to GitHub Actions
 
 ## [0.1.0]
 - Gem init

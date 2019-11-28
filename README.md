@@ -1,6 +1,6 @@
 # ConsulApplicationSettings
 
-[![Build Status](https://travis-ci.org/matic-insurance/consul_application_settings.svg?branch=master)](https://travis-ci.org/matic-insurance/consul_application_settings)
+![Build Status](https://github.com/matic-insurance/consul_application_settings/workflows/ci/badge.svg?branch=master)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/b0eaebcf83898535ea4e/test_coverage)](https://codeclimate.com/github/matic-insurance/consul_application_settings/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/b0eaebcf83898535ea4e/maintainability)](https://codeclimate.com/github/matic-insurance/consul_application_settings/maintainability)
 
