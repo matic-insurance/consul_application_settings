@@ -1,0 +1,69 @@
+name: ci
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: [ '2.5.x', '2.6.x' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.OS }}-ruby-${{ matrix.ruby }}
+          restore-keys: ${{ runner.OS }}-
+
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: Set up Bundler
+        run: gem install bundler:2.0.1
+      - name: Set up Dependencies
+        run: bundle install --path vendor/bundle
+
+      - name: Run Tests
+        run: ./bin/rspec
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'release' && github.event.action == 'published'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
+      - name: Set up Bundler
+        run: gem install bundler:2.0.1
+      - name: Set up credentials
+        run: |
+          mkdir -p $HOME/.gem
+          touch $HOME/.gem/credentials
+          chmod 0600 $HOME/.gem/credentials
+          printf -- "---\n:rubygems_api_key: ${{secrets.RUBYGEMS_AUTH_TOKEN}}\n" > $HOME/.gem/credentials
+
+      - name: Get version
+        run: echo "${GITHUB_REF/refs\/tags\//}" > release.tag
+      - name: Set version
+        run: sed -i "s/0.0.0/$(<release.tag)/g" */**/version.rb
+
+      - name: Build gem
+        run: gem build *.gemspec
+      - name: Push gem
+        run: gem push *.gem
