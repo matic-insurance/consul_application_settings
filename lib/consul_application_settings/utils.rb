@@ -28,7 +28,7 @@ module ConsulApplicationSettings
       def cast_complex_value(value)
         PARSING_CLASSES.each do |parser|
           return parser.call(value)
-        rescue StandardError => _
+        rescue StandardError => _e
           nil
         end
         value.to_s
