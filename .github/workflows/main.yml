@@ -40,7 +40,12 @@ jobs:
         run: bundle install --path vendor/bundle
 
       - name: Run Tests
-        run: ./bin/rspec
+        uses: paambaati/codeclimate-action@v2.3.0
+        env:
+          COVERAGE: true
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: ./bin/rspec
 
   release:
     runs-on: ubuntu-latest
