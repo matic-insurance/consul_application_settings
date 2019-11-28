@@ -1,5 +1,6 @@
 ## [Unreleased]
 - Replace CI to GitHub Actions
+- Allow Operations without Consul
 
 ## [0.1.0]
 - Gem init

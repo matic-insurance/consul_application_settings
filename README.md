@@ -37,7 +37,7 @@ gem 'consul_application_settings'
 
 ### Initialization
 
-At the load of application 
+At the load of application: 
 ```ruby
 ConsulApplicationSettings.configure do |config|
   # Specify path to defaults file
@@ -57,23 +57,25 @@ APP_SETTINGS = ConsulApplicationSettings.load
 
 Assuming your defaults file in repository `config/settings.yml` looks like:
 ```yaml
-app_name: 'MyCoolApp'
-hostname: 'http://localhost:3001'
-
-integrations:
-  database:
-    domain: localhost
-    user: app
-    password: password1234
-  slack:
-    enabled: false
-    webhook_url: 'https://hooks.slack.com/services/XXXXXX/XXXXX/XXXXXXX'
+staging:
+  my_cool_app:
+    app_name: 'MyCoolApp'
+    hostname: 'http://localhost:3001'
+    
+    integrations:
+      database:
+        domain: localhost
+        user: app
+        password: password1234
+      slack:
+        enabled: false
+        webhook_url: 'https://hooks.slack.com/services/XXXXXX/XXXXX/XXXXXXX'
 ```
 
 And consul has following settings
 ```json
 {
-  "production": {
+  "staging": {
     "my_cool_app": {
      "hostname": "https://mycoolapp.com",
      "integrations": {
@@ -122,6 +124,26 @@ slack_settings = integrations_settings.load_from('slack')
 slack_settings.enabled              # true
 slack_settings.get('webhook_url')   # "https://hooks.slack.com/services/XXXXXX/XXXXX/XXXXXXX"
 ``` 
+
+### Gem Configuration
+You can configure gem with block:
+```ruby
+ConsulApplicationSettings.configure do |config|
+  config.namespace = 'staging/my_cool_app'
+end
+```
+or one option at a time
+```ruby
+ConsulApplicationSettings.config.namespace = 'staging/my_cool_app'
+```
+
+All Gem configurations
+
+| Configuration                    | Required | Default | Type    | Description                                                                  |
+|----------------------------------|----------|---------|---------|------------------------------------------------------------------------------|
+| defaults                         | yes      |         | String  | Path to the file with default settings                                       |
+| namespace                        | no       |         | String  | Base path to read settings from in consul and defaults                       |
+| disable_consul_connection_errors | no       | false   | Boolean | Do not raise exception when consul is not available (useful for development) |
 
 ## Development
 

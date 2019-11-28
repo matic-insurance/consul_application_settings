@@ -5,6 +5,7 @@ module ConsulApplicationSettings
     attr_accessor :defaults_path
     # Optional attributes
     attr_accessor :namespace
+    attr_accessor :disable_consul_connection_errors
 
     def initialize
       self.namespace = ''
