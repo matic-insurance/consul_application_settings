@@ -9,5 +9,9 @@ RSpec.describe ConsulApplicationSettings::Configuration do
     it 'has empty namespace' do
       expect(config.namespace).to eq('')
     end
+
+    it 'raising consul connection errors' do
+      expect(config.disable_consul_connection_errors).to be_falsey
+    end
   end
 end
