@@ -57,23 +57,25 @@ APP_SETTINGS = ConsulApplicationSettings.load
 
 Assuming your defaults file in repository `config/settings.yml` looks like:
 ```yaml
-app_name: 'MyCoolApp'
-hostname: 'http://localhost:3001'
-
-integrations:
-  database:
-    domain: localhost
-    user: app
-    password: password1234
-  slack:
-    enabled: false
-    webhook_url: 'https://hooks.slack.com/services/XXXXXX/XXXXX/XXXXXXX'
+staging:
+  my_cool_app:
+    app_name: 'MyCoolApp'
+    hostname: 'http://localhost:3001'
+    
+    integrations:
+      database:
+        domain: localhost
+        user: app
+        password: password1234
+      slack:
+        enabled: false
+        webhook_url: 'https://hooks.slack.com/services/XXXXXX/XXXXX/XXXXXXX'
 ```
 
 And consul has following settings
 ```json
 {
-  "production": {
+  "staging": {
     "my_cool_app": {
      "hostname": "https://mycoolapp.com",
      "integrations": {
