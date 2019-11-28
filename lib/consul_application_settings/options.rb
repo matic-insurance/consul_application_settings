@@ -16,7 +16,7 @@ module ConsulApplicationSettings
     end
 
     def get(name)
-      consul_value = Diplomat::Kv.get(key_path(name), {}, :return)
+      consul_value = key_value(name)
       if consul_value.nil? || consul_value.empty?
         defaults.get(name)
       else
@@ -39,6 +39,12 @@ module ConsulApplicationSettings
     end
 
     private
+
+    def key_value(name)
+      Diplomat::Kv.get(key_path(name), {}, :return)
+    rescue Diplomat::PathNotFound => e
+      raise e unless ConsulApplicationSettings.config.disable_consul_connection_errors
+    end
 
     def key_path(name)
       ConsulApplicationSettings::Utils.generate_path(path, name)
