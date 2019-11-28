@@ -42,7 +42,7 @@ module ConsulApplicationSettings
 
     def key_value(name)
       Diplomat::Kv.get(key_path(name), {}, :return)
-    rescue Diplomat::PathNotFound => e
+    rescue Faraday::ConnectionFailed => e
       raise e unless ConsulApplicationSettings.config.disable_consul_connection_errors
     end
 
