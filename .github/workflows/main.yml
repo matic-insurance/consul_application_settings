@@ -15,6 +15,11 @@ jobs:
     strategy:
       matrix:
         ruby: [ '2.5.x', '2.6.x' ]
+    services:
+      redis:
+        image: consul:1.6
+        ports:
+          - '8500:8500'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
