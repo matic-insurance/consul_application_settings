@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.1.2]
+### Fixes
+- Catch system call errors when consul not available
+
 ## [0.1.1]
 ### New features
 - Allow Operations without Consul
@@ -14,6 +18,7 @@
 - Support deep settings search
 - Support nested configs
 
-[Unreleased]: https://github.com/matic-insurance/consul_application_settings/compare/0.1.1...HEAD
+[Unreleased]: https://github.com/matic-insurance/consul_application_settings/compare/0.1.2...HEAD
+[0.1.2]: https://github.com/matic-insurance/consul_application_settings/compare/0.1.1...0.1.2
 [0.1.1]: https://github.com/matic-insurance/consul_application_settings/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/matic-insurance/consul_application_settings/compare/cb7194f...0.1.0
