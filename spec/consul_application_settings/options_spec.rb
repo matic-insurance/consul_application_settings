@@ -65,6 +65,24 @@ RSpec.describe ConsulApplicationSettings::Options do
           expect(options.get('services/consul/domain')).to eq('consul.com')
         end
       end
+
+      describe 'connection errors handling' do
+        before do
+          configure_settings do |config|
+            config.disable_consul_connection_errors = true
+          end
+        end
+
+        it 'not raising error for system exception' do
+          allow(Diplomat::Kv).to receive(:get).and_raise Errno::EADDRNOTAVAIL
+          expect { options.get(:name) }.not_to raise_error
+        end
+
+        it 'not raising error for faraday exception' do
+          allow(Diplomat::Kv).to receive(:get).and_raise Faraday::ConnectionFailed.new('error')
+          expect { options.get(:name) }.not_to raise_error
+        end
+      end
     end
 
     describe '.[]' do
