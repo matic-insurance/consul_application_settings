@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.1.3]
+### Fixes
+- Add `Diplomat::PathNotFound` to the list of caught exceptions
+
 ## [0.1.2]
 ### Fixes
 - Catch system call errors when consul not available
