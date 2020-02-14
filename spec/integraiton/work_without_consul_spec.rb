@@ -28,13 +28,13 @@ RSpec.describe 'ConsulApplicationSettings without available consul' do
     end
 
     it 'raises error' do
-      expect { settings.get('ping') }.to raise_error(Faraday::ConnectionFailed)
+      expect { settings.get('ping') }.to raise_error(Diplomat::PathNotFound)
     end
   end
 
   context 'when config.disable_consul_connection_errors is default' do
     it 'raises error' do
-      expect { settings.get('ping') }.to raise_error(Faraday::ConnectionFailed)
+      expect { settings.get('ping') }.to raise_error(Diplomat::PathNotFound)
     end
   end
 end
