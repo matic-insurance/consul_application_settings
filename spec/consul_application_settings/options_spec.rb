@@ -82,6 +82,11 @@ RSpec.describe ConsulApplicationSettings::Options do
           allow(Diplomat::Kv).to receive(:get).and_raise Faraday::ConnectionFailed.new('error')
           expect { options.get(:name) }.not_to raise_error
         end
+
+        it 'not raising error for faraday exception' do
+          allow(Diplomat::Kv).to receive(:get).and_raise Diplomat::PathNotFound.new('error')
+          expect { options.get(:name) }.not_to raise_error
+        end
       end
     end
 
