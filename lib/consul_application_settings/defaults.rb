@@ -10,7 +10,7 @@ module ConsulApplicationSettings
     end
 
     def get(name)
-      read_path(name, contents)
+      read_path(name, contents).clone
     end
 
     def load_from(path)
