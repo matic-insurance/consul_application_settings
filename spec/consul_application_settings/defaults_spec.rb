@@ -23,6 +23,12 @@ RSpec.describe ConsulApplicationSettings::Defaults do
     it 'returns numeric values' do
       expect(defaults.get(:instances)).to eq(4)
     end
+
+    it 'clones the value before returning' do
+      array = defaults.get(:collection)
+      array << 'd'
+      expect(defaults.get(:collection)).to eq(%w[a b c])
+    end
   end
 
   describe '.load_from' do
