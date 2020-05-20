@@ -1,0 +1,6 @@
+application:
+  name: "LocalNestedStructure"
+  services:
+    consul:
+      domain: localhost123
+visible: true
