@@ -1,12 +1,7 @@
 RSpec.describe ConsulApplicationSettings::ConsulProvider do
   let(:provider) { described_class.new(base_path, config) }
   let(:base_path) { '' }
-  let(:config) do
-    ConsulApplicationSettings::Configuration.new.tap do |config|
-      config.disable_consul_connection_errors = disable_consul_connection_errors
-    end
-  end
-  let(:disable_consul_connection_errors) { true }
+  let(:config) { ConsulApplicationSettings::Configuration.new }
 
   before do
     set_consul_value('cas_test_root/a/b', '111')
@@ -65,7 +60,9 @@ RSpec.describe ConsulApplicationSettings::ConsulProvider do
     end
 
     context 'when connection errors are enabled' do
-      let(:disable_consul_connection_errors) { false }
+      let(:config) do
+        ConsulApplicationSettings::Configuration.new.tap { |config| config.disable_consul_connection_errors = false }
+      end
 
       it 'raises error for system exception' do
         allow(Diplomat::Kv).to receive(:get).and_raise Errno::EADDRNOTAVAIL

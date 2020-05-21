@@ -15,7 +15,7 @@ RSpec.describe ConsulApplicationSettings::SettingsProvider do
       expect(provider.get('application/services/consul/domain')).to eq('0.0.0.0')
     end
 
-    it 'gets value from file if it does not exist unb Consul' do
+    it 'gets value from file if it does not exist in Consul' do
       expect(provider.get('application/name')).to eq('NestedStructure')
     end
   end
