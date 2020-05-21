@@ -23,7 +23,7 @@ Example use cases:
 
 Gem reads any particular setting from consul and if it is missing tries to find value in YAML defaults file
 
-**NOTE** Consul is requested every time you query the settings. Defaults YAML file loaded in memory and not changing.
+**NOTE** Consul is requested every time you query the settings. Defaults YAML file is loaded in memory and is not changing.
 
 ## Installation
 
@@ -40,13 +40,17 @@ gem 'consul_application_settings'
 At the load of application: 
 ```ruby
 ConsulApplicationSettings.configure do |config|
-  # Specify path to defaults file
-  config.defaults = Rails.root.join('config/settings.yml')
-  # Specify namespace to consul settings
-  config.namespace = 'staging/my_cool_app'
+  # Specify path to the base settings YML. Default: 'config/application_settings.yml' 
+  config.base_file_path = Rails.root.join('config/my_settings.yml')
+  # Specify path to the local settings YML, which overrides the base file. Default: 'config/application_settings.local.yml'
+  config.local_file_path = Rails.root.join('config/my_settings.local.yml')
+  # Specify whether exceprion should be thrown on Consul connection errors. Default: false
+  config.disable_consul_connection_errors = true
 end
 
 APP_SETTINGS = ConsulApplicationSettings.load
+# Specify path to settings both in YML files and Consul
+AUTH_SETTIGNS = ConsulApplicationSettings.load('authentication')
 ```
 
 **NOTE** For rails you can add this code to custom initializer `console_application_settings.rb` in `app/config/initializers`
@@ -55,7 +59,7 @@ APP_SETTINGS = ConsulApplicationSettings.load
 
 ### Settings structure
 
-Assuming your defaults file in repository `config/settings.yml` looks like:
+Assuming your defaults file in repository `config/application_settings.yml` looks like:
 ```yaml
 staging:
   my_cool_app:
@@ -98,14 +102,12 @@ Anywhere in your code base, after initialization, you can use
 previously loaded settings to query any key by full path
 
 ```ruby
-APP_SETTINGS.app_name                           # "MyCoolApp"
+APP_SETTINGS['app_name']                           # "MyCoolApp"
 APP_SETTINGS.get(:hostname)                     # "https://mycoolapp.com"
 
 APP_SETTINGS.get('integrations/database/user')  # "app"
 APP_SETTINGS['integrations/slack/enabled']      # true
 ```
-
-**NOTE** Gem is pulling settings from consul with namespace but ignores namespace for defaults
 
 ### Nested settings
 
@@ -114,36 +116,30 @@ gem provides interface to avoid duplicating absolute path
 
 ```ruby
 # You can load subsettings from root object
-db_settings = APP_SETTINGS.load_from('integrations/database')
-db_settings.domain                  # "194.78.92.19"
-db_settings['user']                 # "app"
-
-# You can load subsettings from subsettings
-integrations_settings = APP_SETTINGS.load_from('integrations')
-slack_settings = integrations_settings.load_from('slack')  
-slack_settings.enabled              # true
-slack_settings.get('webhook_url')   # "https://hooks.slack.com/services/XXXXXX/XXXXX/XXXXXXX"
+db_settings = APP_SETTINGS.load('integrations/database')
+db_settings.get(:domain)                  # "194.78.92.19"
+db_settings['user']                       # "app"
 ``` 
 
 ### Gem Configuration
 You can configure gem with block:
 ```ruby
 ConsulApplicationSettings.configure do |config|
-  config.namespace = 'staging/my_cool_app'
+  config.local_file_path = 'config/config.yml'
 end
 ```
 or one option at a time
 ```ruby
-ConsulApplicationSettings.config.namespace = 'staging/my_cool_app'
+ConsulApplicationSettings.config.local_file_path = 'config/config.yml'
 ```
 
 All Gem configurations
 
-| Configuration                    | Required | Default | Type    | Description                                                                  |
-|----------------------------------|----------|---------|---------|------------------------------------------------------------------------------|
-| defaults                         | yes      |         | String  | Path to the file with default settings                                       |
-| namespace                        | no       |         | String  | Base path to read settings from in consul and defaults                       |
-| disable_consul_connection_errors | no       | false   | Boolean | Do not raise exception when consul is not available (useful for development) |
+| Configuration                    | Required | Default | Type    | Description                                                                                                  |
+|----------------------------------|----------|-----------------------------------------|---------|------------------------------------------------------------------------------|
+| base_file_path                   | no       | 'config/application_settings.yml'       | String  | Path to the file with base settings                                          |
+| local_file_path                  | no       | 'config/application_settings.local.yml' | String  | Path to the file with local settings overriding the base settings            |
+| disable_consul_connection_errors | no       | true                                    | Boolean | Do not raise exception when consul is not available (useful for development) |
 
 ## Development
 
