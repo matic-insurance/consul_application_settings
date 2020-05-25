@@ -48,7 +48,7 @@ module ConsulApplicationSettings
       raise ConsulApplicationSettings::Error, 'reading arrays not implemented' if hash.is_a? Array
       return {} if hash.nil?
 
-      hash.fetch(key.to_s)
+      hash.fetch(key.to_s, nil)
     end
   end
 end

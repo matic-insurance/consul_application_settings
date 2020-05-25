@@ -47,6 +47,12 @@ RSpec.describe ConsulApplicationSettings::FileProvider do
       end
     end
 
+    context 'when key is not found' do
+      it 'returns nil' do
+        expect(provider.get(:new_key)).to eq(nil)
+      end
+    end
+
     it 'returns list values' do
       expect(provider.get(:collection)).to eq(%w[a b c])
     end

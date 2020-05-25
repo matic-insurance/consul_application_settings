@@ -18,5 +18,9 @@ RSpec.describe ConsulApplicationSettings::SettingsProvider do
     it 'gets value from file if it does not exist in Consul' do
       expect(provider.get('application/name')).to eq('NestedStructure')
     end
+
+    it 'returns nil if the key does not exist' do
+      expect(provider.get('application/key')).to eq(nil)
+    end
   end
 end
