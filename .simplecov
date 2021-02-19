@@ -1,1 +1,4 @@
-SimpleCov.start if ENV["COVERAGE"]
+if ENV["COVERAGE"]
+  SimpleCov.start
+  SimpleCov.formatter = SimpleCov::Formatter::Codecov
+end
