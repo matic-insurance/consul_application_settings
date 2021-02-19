@@ -1,8 +1,7 @@
 # ConsulApplicationSettings
 
 ![Build Status](https://github.com/matic-insurance/consul_application_settings/workflows/ci/badge.svg?branch=master)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/b0eaebcf83898535ea4e/test_coverage)](https://codeclimate.com/github/matic-insurance/consul_application_settings/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/b0eaebcf83898535ea4e/maintainability)](https://codeclimate.com/github/matic-insurance/consul_application_settings/maintainability)
+[![Test Coverage](https://codecov.io/gh/matic-insurance/consul_application_settings/branch/master/graph/badge.svg?token=5E8NA8EE8L)](https://codecov.io/gh/matic-insurance/consul_application_settings)
 
 Gem that simplifies usage of Consul (via [Diplomat gem](https://github.com/WeAreFarmGeek/diplomat)) 
 to host application settings. Gem provides defaults via yaml files and other utilities 
