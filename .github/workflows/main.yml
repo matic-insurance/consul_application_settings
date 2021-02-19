@@ -39,13 +39,15 @@ jobs:
       - name: Set up Dependencies
         run: bundle install --path vendor/bundle
 
-      - name: Run Tests
-        uses: paambaati/codeclimate-action@v2.3.0
+      - name: Run specs
         env:
           COVERAGE: true
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        with:
-          coverageCommand: ./bin/rspec
+        run: bundle exec rspec
+
+      - name: Upload coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: bash <(curl -s https://codecov.io/bash)
 
   release:
     runs-on: ubuntu-latest
