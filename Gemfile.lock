@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     consul_application_settings (0.0.0)
-      diplomat (~> 2.1.3)
+      diplomat (~> 2.5.1)
 
 GEM
   remote: https://rubygems.org/
@@ -12,12 +12,15 @@ GEM
       simplecov (>= 0.15, < 0.22)
     deep_merge (1.2.1)
     diff-lcs (1.3)
-    diplomat (2.1.3)
-      deep_merge (~> 1.0, >= 1.0.1)
-      faraday (~> 0.9)
+    diplomat (2.5.1)
+      deep_merge (~> 1.2)
+      faraday (>= 0.9)
     docile (1.3.1)
-    faraday (0.17.3)
+    faraday (1.3.0)
+      faraday-net_http (~> 1.0)
       multipart-post (>= 1.2, < 3)
+      ruby2_keywords
+    faraday-net_http (1.0.1)
     jaro_winkler (1.5.2)
     json (2.3.1)
     multipart-post (2.1.1)
@@ -51,6 +54,7 @@ GEM
     rubocop-rspec (1.32.0)
       rubocop (>= 0.60.0)
     ruby-progressbar (1.10.0)
+    ruby2_keywords (0.0.4)
     simplecov (0.16.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
