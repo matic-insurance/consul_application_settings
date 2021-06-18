@@ -53,6 +53,12 @@ RSpec.describe ConsulApplicationSettings::FileProvider do
       end
     end
 
+    context 'when the key is an executable ruby code' do
+      it 'executes it and returns the value' do
+        expect(provider.get(:erb_key)).to eq 4
+      end
+    end
+
     it 'returns list values' do
       expect(provider.get(:collection)).to eq(%w[a b c])
     end

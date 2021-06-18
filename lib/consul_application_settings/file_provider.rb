@@ -1,4 +1,5 @@
 require 'yaml'
+require 'erb'
 
 module ConsulApplicationSettings
   # Provides access to settings stored in file system with support of base and local files
@@ -33,7 +34,7 @@ module ConsulApplicationSettings
     def read_yml(path)
       return {} unless File.exist?(path)
 
-      YAML.safe_load(IO.read(path))
+      YAML.safe_load(ERB.new(File.read(path)).result)
     rescue Psych::SyntaxError, Errno::ENOENT => e
       raise ConsulApplicationSettings::Error, "Cannot read settings file at #{path}: #{e.message}"
     end
