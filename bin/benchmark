@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+# brew install consul
+
+require 'bundler/setup'
+require 'consul_application_settings'
+require 'benchmark'
+
+f = 'spec/fixtures/base_application_settings.yml'
+n = 1000
+
+`pgrep consul | xargs kill`
+
+puts 'A - current implementation (consul + fallback on file)'
+puts 'B - only reading from file'
+puts
+
+puts '- Benchmark without consul agent'
+Benchmark.bm do |x|
+  x.report('A') do
+    n.times { ConsulApplicationSettings.load(f).get('application/name') }
+  end
+
+  x.report('B') do
+    n.times { ConsulApplicationSettings.load1(f).get('application/name') }
+  end
+end
+puts
+
+spawn('consul agent -dev -node machine > /dev/null 2>&1')
+
+puts '- Benchmark with consul agent running'
+Benchmark.bm do |x|
+  x.report('A') do
+    n.times { ConsulApplicationSettings.load(f).get('application/name') }
+  end
+
+  x.report('B') do
+    n.times { ConsulApplicationSettings.load1(f).get('application/name') }
+  end
+end
+
+`pgrep consul | xargs kill`
