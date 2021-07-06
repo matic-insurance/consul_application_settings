@@ -16,13 +16,16 @@ puts 'B - only reading from file'
 puts
 
 puts '- Benchmark without consul agent'
+ca = ConsulApplicationSettings.load(f)
+ca1 = ConsulApplicationSettings.load1(f)
+
 Benchmark.bm do |x|
   x.report('A') do
-    n.times { ConsulApplicationSettings.load(f).get('application/name') }
+    n.times { ca.get('application/name') }
   end
 
   x.report('B') do
-    n.times { ConsulApplicationSettings.load1(f).get('application/name') }
+    n.times { ca1.get('application/name') }
   end
 end
 puts
@@ -32,11 +35,11 @@ spawn('consul agent -dev -node machine > /dev/null 2>&1')
 puts '- Benchmark with consul agent running'
 Benchmark.bm do |x|
   x.report('A') do
-    n.times { ConsulApplicationSettings.load(f).get('application/name') }
+    n.times { ca.get('application/name') }
   end
 
   x.report('B') do
-    n.times { ConsulApplicationSettings.load1(f).get('application/name') }
+    n.times { ca1.get('application/name') }
   end
 end
 
