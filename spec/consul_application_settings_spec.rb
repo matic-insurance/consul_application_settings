@@ -12,6 +12,28 @@ RSpec.describe ConsulApplicationSettings do
     expect(Diplomat::Kv.get('foo')).to eq('bar')
   end
 
+  describe 'integration flows', :default_settings_file do
+    describe 'providers priority' do
+      it 'reads value from consul' do
+        set_consul_value('application/name', 'bar')
+        settings = ConsulApplicationSettings.load
+        expect(settings.get('application/name')).to eq('bar')
+      end
+
+      it 'reads value from disk when consul missing' do
+        settings = ConsulApplicationSettings.load
+        expect(settings.get('application/name')).to eq('NestedStructure')
+      end
+    end
+
+    describe 'nested structures' do
+      it 'supports path in load' do
+        settings = ConsulApplicationSettings.load('application/services')
+        expect(settings.get('consul/domain')).to eq('localhost')
+      end
+    end
+  end
+
   describe '.configure' do
     let(:local_file_path) { 'path2' }
 
