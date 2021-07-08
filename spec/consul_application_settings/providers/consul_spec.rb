@@ -1,4 +1,4 @@
-RSpec.describe ConsulApplicationSettings::ConsulProvider do
+RSpec.describe ConsulApplicationSettings::Providers::Consul do
   let(:provider) { described_class.new(base_path, config) }
   let(:base_path) { '' }
   let(:config) { ConsulApplicationSettings::Configuration.new }

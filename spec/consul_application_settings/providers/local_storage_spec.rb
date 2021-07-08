@@ -1,4 +1,4 @@
-RSpec.describe ConsulApplicationSettings::FileProvider do
+RSpec.describe ConsulApplicationSettings::Providers::LocalStorage do
   let(:provider) { described_class.new(base_path, config) }
   let(:base_path) { '' }
   let(:config) do

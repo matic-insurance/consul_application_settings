@@ -1,7 +1,7 @@
 require 'consul_application_settings/version'
 require 'consul_application_settings/configuration'
-require 'consul_application_settings/consul_provider'
-require 'consul_application_settings/file_provider'
+require 'consul_application_settings/providers/consul'
+require 'consul_application_settings/providers/local_storage'
 require 'consul_application_settings/settings_provider'
 require 'consul_application_settings/utils'
 
