@@ -1,6 +1,6 @@
 module ConsulApplicationSettings
   # Provides access to settings stored in Consul or in file system
-  class SettingsProvider
+  class Reader
     def initialize(base_path, config)
       @consul_provider = ConsulApplicationSettings::Providers::Consul.new(base_path, config)
       @file_provider = ConsulApplicationSettings::Providers::LocalStorage.new(base_path, config)

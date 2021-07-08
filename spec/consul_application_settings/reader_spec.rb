@@ -1,4 +1,4 @@
-RSpec.describe ConsulApplicationSettings::SettingsProvider do
+RSpec.describe ConsulApplicationSettings::Reader do
   let(:provider) { described_class.new('', config) }
   let(:config) do
     ConsulApplicationSettings::Configuration.new.tap do |config|
