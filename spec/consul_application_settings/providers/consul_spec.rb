@@ -5,6 +5,7 @@ RSpec.describe ConsulApplicationSettings::Providers::Consul do
 
   before do
     set_consul_value('cas_test_root/a/b', '111')
+    set_consul_value('cas_test_root/children', 'children_value')
     set_consul_value('cas_test_value', '222')
     set_consul_value('cas_test_string', 'asdfg')
     set_consul_value('cas_test_list', %w[a b c])
@@ -32,7 +33,19 @@ RSpec.describe ConsulApplicationSettings::Providers::Consul do
       end
 
       it 'correctly retrieves simple paths' do
-        expect(provider.get('cas_test_value')).to eq('')
+        expect(provider.get('children')).to eq('children_value')
+      end
+    end
+
+    context 'when base path is incorrect' do
+      let(:base_path) { 'missing_value' }
+
+      it 'correctly retrieves complex paths' do
+        expect(provider.get('a/b')).to eq(nil)
+      end
+
+      it 'correctly retrieves simple paths' do
+        expect(provider.get('children')).to eq(nil)
       end
     end
 
@@ -98,6 +111,10 @@ RSpec.describe ConsulApplicationSettings::Providers::Consul do
 
     it 'returns float values' do
       expect(provider.get('cas_test_float')).to eq(0.3)
+    end
+
+    it 'returns nil when missing' do
+      expect(provider.get('missing')).to eq(nil)
     end
   end
 end

@@ -18,7 +18,9 @@ module ConsulApplicationSettings
 
       def fetch_value(path)
         full_path = generate_full_path(path)
-        Diplomat::Kv.get(full_path, {}, :return)
+        Diplomat::Kv.get(full_path, {})
+      rescue Diplomat::KeyNotFound
+        return nil
       rescue SystemCallError, Faraday::ConnectionFailed, Diplomat::PathNotFound => e
         raise e unless disable_consul_connection_errors?
       end
