@@ -26,10 +26,16 @@ RSpec.describe ConsulApplicationSettings do
       end
     end
 
-    describe 'nested structures' do
+    describe 'path operations' do
       it 'supports path in load' do
         settings = ConsulApplicationSettings.load('application/services')
         expect(settings.get('consul/domain')).to eq('localhost')
+      end
+
+      it 'supports additional path in next load' do
+        root_settings = ConsulApplicationSettings.load
+        child_settings = root_settings.load('application/services')
+        expect(child_settings.get('consul/domain')).to eq('localhost')
       end
     end
   end
