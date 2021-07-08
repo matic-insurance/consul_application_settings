@@ -53,6 +53,12 @@ RSpec.describe ConsulApplicationSettings::Providers::LocalStorage do
       end
     end
 
+    context 'when deep key is not found' do
+      it 'returns nil' do
+        expect(provider.get('missing_parent/key')).to eq(nil)
+      end
+    end
+
     it 'returns list values' do
       expect(provider.get(:collection)).to eq(%w[a b c])
     end

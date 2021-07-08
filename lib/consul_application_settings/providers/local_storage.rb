@@ -42,14 +42,16 @@ module ConsulApplicationSettings
       def read_path(path)
         full_path = ConsulApplicationSettings::Utils.generate_path(@base_path, path)
         parts = ConsulApplicationSettings::Utils.decompose_path(full_path)
-        parts.reduce(@data, &method(:read_value))
+        key = parts.pop
+        hash = parts.reduce(@data, &method(:traverse))
+        hash.fetch(key, nil)
       end
 
-      def read_value(hash, key)
+      def traverse(hash, key)
         raise ConsulApplicationSettings::Error, 'reading arrays not implemented' if hash.is_a? Array
         return {} if hash.nil?
 
-        hash.fetch(key.to_s, nil)
+        hash.fetch(key.to_s, {})
       end
     end
   end
