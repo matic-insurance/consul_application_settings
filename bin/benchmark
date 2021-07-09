@@ -1,0 +1,63 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'consul_application_settings'
+require 'benchmark'
+
+ITERATIONS = 1000
+
+def kill_consul
+  `pgrep consul | xargs kill`
+end
+
+def start_consul
+  spawn('consul agent -dev -node machine > /dev/null 2>&1')
+end
+
+def application_settings(providers)
+  file = 'spec/fixtures/base_application_settings.yml'
+  ConsulApplicationSettings.configure do |config|
+    config.settings_providers = providers
+  end
+  ConsulApplicationSettings.load(file)
+end
+
+def benchmark_gem
+  Benchmark.bm(20) do |x|
+    x.report('Real Time Consul') do
+      ca = application_settings([
+                                  ConsulApplicationSettings::Providers::Consul,
+                                  ConsulApplicationSettings::Providers::LocalStorage
+                                ])
+      ITERATIONS.times { ca.get('application/name') }
+    end
+
+    x.report('Preloaded Consul') do
+      ca = application_settings([
+                                  ConsulApplicationSettings::Providers::ConsulPreloaded,
+                                  ConsulApplicationSettings::Providers::LocalStorage
+                                ])
+      ITERATIONS.times { ca.get('application/name') }
+    end
+
+    x.report('File Only') do
+      ca = application_settings([
+                                  ConsulApplicationSettings::Providers::ConsulPreloaded
+                                ])
+      ITERATIONS.times { ca.get('application/name') }
+    end
+  end
+end
+
+puts '-' * 80
+puts 'Benchmark without consul agent'
+kill_consul
+benchmark_gem
+
+
+puts '-' * 80
+puts 'Benchmark with consul agent running'
+start_consul
+benchmark_gem
+
+kill_consul
