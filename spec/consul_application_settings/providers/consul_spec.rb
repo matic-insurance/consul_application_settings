@@ -36,6 +36,7 @@ RSpec.describe ConsulApplicationSettings::Providers::Consul do
       it 'does not raise error for system exception' do
         allow(Diplomat::Kv).to receive(:get).and_raise Errno::EADDRNOTAVAIL
         expect { provider.get(:name) }.not_to raise_error
+        expect(provider.get('foo')).to eq(nil)
       end
 
       it 'does not raise error for faraday exception' do

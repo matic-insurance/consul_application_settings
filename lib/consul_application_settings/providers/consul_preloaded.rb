@@ -20,6 +20,7 @@ module ConsulApplicationSettings
         {}
       rescue SystemCallError, Faraday::ConnectionFailed, Diplomat::PathNotFound => e
         raise e unless @config.disable_consul_connection_errors
+        {}
       end
     end
   end
