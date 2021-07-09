@@ -4,57 +4,23 @@ RSpec.describe ConsulApplicationSettings::Providers::Consul do
   let(:config) { ConsulApplicationSettings::Configuration.new }
 
   before do
-    set_consul_value('cas_test_root/a/b', '111')
-    set_consul_value('cas_test_root/children', 'children_value')
-    set_consul_value('cas_test_value', '222')
-    set_consul_value('cas_test_string', 'asdfg')
-    set_consul_value('cas_test_list', %w[a b c])
-    set_consul_value('cas_test_bool', true)
-    set_consul_value('cas_test_int', 5)
-    set_consul_value('cas_test_float', 0.3)
+    set_consul_value('foo', 'bar')
+    set_consul_value('root/level_2/level_2_child', 'child_value')
+    set_consul_value('root/level_2/level_3/level_4', 'descendant_value')
+    set_consul_value('values/string', 'a string')
+    set_consul_value('values/int_as_string', '2222')
+    set_consul_value('values/integer', 123)
+    set_consul_value('values/float', 5.0)
+    set_consul_value('values/empty', nil)
+    set_consul_value('values/boolean_true', true)
+    set_consul_value('values/boolean_false', false)
+  end
+
+  it_behaves_like 'a provider' do
+    let(:config) { ConsulApplicationSettings::Configuration.new }
   end
 
   describe '#get' do
-    context 'when base path is empty' do
-      it 'correctly retrieves complex paths' do
-        expect(provider.get('cas_test_root/a/b')).to eq(111)
-      end
-
-      it 'correctly retrieves simple paths' do
-        expect(provider.get('cas_test_value')).to eq(222)
-      end
-    end
-
-    context 'when base path is present' do
-      let(:base_path) { 'cas_test_root' }
-
-      it 'correctly retrieves complex paths' do
-        expect(provider.get('a/b')).to eq(111)
-      end
-
-      it 'correctly retrieves simple paths' do
-        expect(provider.get('children')).to eq('children_value')
-      end
-    end
-
-    context 'when base path is incorrect' do
-      let(:base_path) { 'missing_value' }
-
-      it 'correctly retrieves complex paths' do
-        expect(provider.get('a/b')).to eq(nil)
-      end
-
-      it 'correctly retrieves simple paths' do
-        expect(provider.get('children')).to eq(nil)
-      end
-    end
-
-    context 'when the key is a symbol' do
-      it 'correctly retrieves data' do
-        expect(provider.get(:cas_test_value)).to eq(222)
-      end
-    end
-
     context 'when connection errors are disabled' do
       it 'does not raise error for system exception' do
         allow(Diplomat::Kv).to receive(:get).and_raise Errno::EADDRNOTAVAIL
@@ -91,30 +57,6 @@ RSpec.describe ConsulApplicationSettings::Providers::Consul do
         allow(Diplomat::Kv).to receive(:get).and_raise Diplomat::PathNotFound
         expect { provider.get(:name) }.to raise_error(Diplomat::PathNotFound)
       end
-    end
-
-    it 'returns string values' do
-      expect(provider.get('cas_test_string')).to eq('asdfg')
-    end
-
-    it 'returns list values' do
-      expect(provider.get('cas_test_list')).to eq(%w[a b c])
-    end
-
-    it 'returns boolean values' do
-      expect(provider.get('cas_test_bool')).to eq(true)
-    end
-
-    it 'returns integer values' do
-      expect(provider.get('cas_test_int')).to eq(5)
-    end
-
-    it 'returns float values' do
-      expect(provider.get('cas_test_float')).to eq(0.3)
-    end
-
-    it 'returns nil when missing' do
-      expect(provider.get('missing')).to eq(nil)
     end
   end
 end
