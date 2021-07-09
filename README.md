@@ -45,6 +45,11 @@ ConsulApplicationSettings.configure do |config|
   config.local_file_path = Rails.root.join('config/my_settings.local.yml')
   # Specify whether exceprion should be thrown on Consul connection errors. Default: false
   config.disable_consul_connection_errors = true
+  # Specify setting providers. Default: [ConsulApplicationSettings::Providers::ConsulPreloaded, ConsulApplicationSettings::Providers::LocalStorage]
+  config.settings_providers = [
+    ConsulApplicationSettings::Providers::Consul,          
+    ConsulApplicationSettings::Providers::LocalStorage          
+  ]
 end
 
 APP_SETTINGS = ConsulApplicationSettings.load
@@ -139,6 +144,10 @@ All Gem configurations
 | base_file_path                   | no       | 'config/application_settings.yml'       | String  | Path to the file with base settings                                          |
 | local_file_path                  | no       | 'config/application_settings.local.yml' | String  | Path to the file with local settings overriding the base settings            |
 | disable_consul_connection_errors | no       | true                                    | Boolean | Do not raise exception when consul is not available (useful for development) |
+| settings_providers               | no       | Array(Provider)                         | Array   | Specify custom setting provider lists                                        |
+
+### Performance vs Consistency
+To be defined in future iterations on Consul Providers
 
 ## Development
 
