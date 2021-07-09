@@ -1,0 +1,14 @@
+foo: 'bar'
+root:
+  level_2:
+    level_2_child: 'child_value'
+    level_3:
+      level_4: 'descendant_value'
+values:
+  string: 'a string'
+  int_as_string: '2222'
+  integer: 123
+  float: 5.0
+  empty:
+  boolean_true: true
+  boolean_false: false

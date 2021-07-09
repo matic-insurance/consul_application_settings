@@ -1,4 +1,4 @@
-RSpec.describe ConsulApplicationSettings::FileProvider do
+RSpec.describe ConsulApplicationSettings::Providers::LocalStorage do
   let(:provider) { described_class.new(base_path, config) }
   let(:base_path) { '' }
   let(:config) do
@@ -10,7 +10,15 @@ RSpec.describe ConsulApplicationSettings::FileProvider do
   let(:base_file_path) { fixture_path('base_application_settings') }
   let(:local_file_path) { fixture_path('local_application_settings') }
 
-  describe '#get' do
+  it_behaves_like 'a provider' do
+    let(:config) do
+      ConsulApplicationSettings::Configuration.new.tap do |config|
+        config.base_file_path = fixture_path('provider_tests')
+      end
+    end
+  end
+
+  describe 'base and local files' do
     context 'when base path is empty' do
       it 'correctly retrieves complex paths' do
         expect(provider.get('application/services/consul/domain')).to eq('localhost123')
@@ -40,43 +48,13 @@ RSpec.describe ConsulApplicationSettings::FileProvider do
         expect(provider.get('application/services/consul/domain')).to eq('localhost')
       end
     end
+  end
 
-    context 'when the key is a symbol' do
-      it 'correctly retrieves data' do
-        expect(provider.get(:instances)).to eq(4)
-      end
-    end
+  context 'when YML file has invalid syntax' do
+    let(:base_file_path) { fixture_path('invalid_syntax') }
 
-    context 'when key is not found' do
-      it 'returns nil' do
-        expect(provider.get(:new_key)).to eq(nil)
-      end
-    end
-
-    it 'returns list values' do
-      expect(provider.get(:collection)).to eq(%w[a b c])
-    end
-
-    it 'returns boolean values' do
-      expect(provider.get(:visible)).to eq(true)
-    end
-
-    it 'returns numeric values' do
-      expect(provider.get(:instances)).to eq(4)
-    end
-
-    it 'clones the value before returning' do
-      array = provider.get(:collection)
-      array << 'd'
-      expect(provider.get(:collection)).to eq(%w[a b c])
-    end
-
-    context 'when YML file has invalid syntax' do
-      let(:base_file_path) { fixture_path('invalid_syntax') }
-
-      it 'raises error' do
-        expect { provider.get(:a) }.to raise_error(ConsulApplicationSettings::Error)
-      end
+    it 'raises error' do
+      expect { provider.get(:a) }.to raise_error(ConsulApplicationSettings::Error)
     end
   end
 end

@@ -6,6 +6,7 @@ module ConsulApplicationSettings
 
     class << self
       def cast_consul_value(value)
+        return nil if value.nil?
         return false if value == 'false'
         return true if value == 'true'
 
