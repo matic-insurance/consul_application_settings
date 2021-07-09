@@ -22,15 +22,11 @@ module ConsulApplicationSettings
       rescue Diplomat::KeyNotFound
         return nil
       rescue SystemCallError, Faraday::ConnectionFailed, Diplomat::PathNotFound => e
-        raise e unless disable_consul_connection_errors?
+        raise e unless @config.disable_consul_connection_errors
       end
 
       def generate_full_path(path)
         ConsulApplicationSettings::Utils.generate_path(@base_path, path)
-      end
-
-      def disable_consul_connection_errors?
-        @config.disable_consul_connection_errors
       end
     end
   end

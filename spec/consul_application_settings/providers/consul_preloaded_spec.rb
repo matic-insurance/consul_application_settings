@@ -1,4 +1,4 @@
-RSpec.describe ConsulApplicationSettings::Providers::Consul do
+RSpec.describe ConsulApplicationSettings::Providers::ConsulPreloaded do
   let(:provider) { described_class.new(base_path, config) }
   let(:base_path) { '' }
   let(:config) { ConsulApplicationSettings::Configuration.new }
@@ -22,26 +22,27 @@ RSpec.describe ConsulApplicationSettings::Providers::Consul do
 
   describe '#get' do
     context 'when value updated on consul' do
-      it 'returns new value' do
+      it 'returns old value' do
+        provider
         set_consul_value('foo', 'baz')
-        expect(provider.get('foo')).to eq('baz')
+        expect(provider.get('foo')).to eq('bar')
       end
     end
 
     context 'when connection errors are disabled' do
       it 'does not raise error for system exception' do
-        allow(Diplomat::Kv).to receive(:get).and_raise Errno::EADDRNOTAVAIL
-        expect { provider.get(:name) }.not_to raise_error
+        allow(Diplomat::Kv).to receive(:get_all).and_raise Errno::EADDRNOTAVAIL
+        expect { provider }.not_to raise_error
       end
 
       it 'does not raise error for faraday exception' do
-        allow(Diplomat::Kv).to receive(:get).and_raise Faraday::ConnectionFailed.new('error')
-        expect { provider.get(:name) }.not_to raise_error
+        allow(Diplomat::Kv).to receive(:get_all).and_raise Faraday::ConnectionFailed.new('error')
+        expect { provider }.not_to raise_error
       end
 
       it 'does not raise error for diplomat exception' do
-        allow(Diplomat::Kv).to receive(:get).and_raise Diplomat::PathNotFound
-        expect { provider.get(:name) }.not_to raise_error
+        allow(Diplomat::Kv).to receive(:get_all).and_raise Diplomat::PathNotFound
+        expect { provider }.not_to raise_error
       end
     end
 
@@ -51,18 +52,18 @@ RSpec.describe ConsulApplicationSettings::Providers::Consul do
       end
 
       it 'raises error for system exception' do
-        allow(Diplomat::Kv).to receive(:get).and_raise Errno::EADDRNOTAVAIL
-        expect { provider.get(:name) }.to raise_error(Errno::EADDRNOTAVAIL)
+        allow(Diplomat::Kv).to receive(:get_all).and_raise Errno::EADDRNOTAVAIL
+        expect { provider }.to raise_error(Errno::EADDRNOTAVAIL)
       end
 
       it 'does not raise error for faraday exception' do
-        allow(Diplomat::Kv).to receive(:get).and_raise Faraday::ConnectionFailed.new('error')
-        expect { provider.get(:name) }.to raise_error(Faraday::ConnectionFailed)
+        allow(Diplomat::Kv).to receive(:get_all).and_raise Faraday::ConnectionFailed.new('error')
+        expect { provider }.to raise_error(Faraday::ConnectionFailed)
       end
 
       it 'does not raise error for diplomat exception' do
-        allow(Diplomat::Kv).to receive(:get).and_raise Diplomat::PathNotFound
-        expect { provider.get(:name) }.to raise_error(Diplomat::PathNotFound)
+        allow(Diplomat::Kv).to receive(:get_all).and_raise Diplomat::PathNotFound
+        expect { provider }.to raise_error(Diplomat::PathNotFound)
       end
     end
   end
