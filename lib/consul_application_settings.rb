@@ -1,4 +1,5 @@
 require 'consul_application_settings/version'
+require 'consul_application_settings/providers/abstract'
 require 'consul_application_settings/providers/consul'
 require 'consul_application_settings/providers/consul_preloaded'
 require 'consul_application_settings/providers/local_storage'

@@ -1,7 +1,7 @@
 RSpec.describe ConsulApplicationSettings::Providers::Consul do
   let(:provider) { described_class.new(base_path, config) }
   let(:base_path) { '' }
-  let(:config) { ConsulApplicationSettings::Configuration.new }
+  let(:config) { instance_double(ConsulApplicationSettings::Configuration) }
 
   before do
     set_consul_value('foo', 'bar')
@@ -17,7 +17,7 @@ RSpec.describe ConsulApplicationSettings::Providers::Consul do
   end
 
   it_behaves_like 'a provider' do
-    let(:config) { ConsulApplicationSettings::Configuration.new }
+    let(:config) { instance_double(ConsulApplicationSettings::Configuration) }
   end
 
   describe '#get' do
@@ -29,6 +29,10 @@ RSpec.describe ConsulApplicationSettings::Providers::Consul do
     end
 
     context 'when connection errors are disabled' do
+      let(:config) do
+        instance_double(ConsulApplicationSettings::Configuration, disable_consul_connection_errors: true)
+      end
+
       it 'does not raise error for system exception' do
         allow(Diplomat::Kv).to receive(:get).and_raise Errno::EADDRNOTAVAIL
         expect { provider.get(:name) }.not_to raise_error
@@ -47,7 +51,7 @@ RSpec.describe ConsulApplicationSettings::Providers::Consul do
 
     context 'when connection errors are enabled' do
       let(:config) do
-        ConsulApplicationSettings::Configuration.new.tap { |config| config.disable_consul_connection_errors = false }
+        instance_double(ConsulApplicationSettings::Configuration, disable_consul_connection_errors: false)
       end
 
       it 'raises error for system exception' do
