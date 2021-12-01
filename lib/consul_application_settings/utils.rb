@@ -9,6 +9,8 @@ module ConsulApplicationSettings
         return nil if value.nil?
         return false if value == 'false'
         return true if value == 'true'
+        return value if value.is_a?(Hash)
+        return convert_to_hash(value) if value.is_a?(Array)
 
         cast_complex_value(value)
       end
@@ -33,6 +35,16 @@ module ConsulApplicationSettings
           nil
         end
         value.to_s
+      end
+
+      def convert_to_hash(data)
+        data_h = data.map do |item|
+          value = cast_consul_value(item[:value])
+          item[:key].split('/').reverse.reduce(value) { |h, v| { v => h } }
+        end
+        data_h.reduce({}) do |dest, source|
+          DeepMerge.deep_merge!(source, dest, { preserve_unmergeables: true })
+        end
       end
     end
   end

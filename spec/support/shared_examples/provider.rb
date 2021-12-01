@@ -64,5 +64,15 @@ RSpec.shared_examples "a provider" do
     it 'returns nil when missing' do
       expect(provider.get('missing')).to eq(nil)
     end
+
+    it 'returns object values' do
+      object = { "level_2_child" => "child_value", "level_3" => { "level_4" => "descendant_value" } }
+      expect(provider.get('root/level_2')).to eq(object)
+    end
+
+    it 'parsing object values' do
+      object = {"boolean_true"=>true, "float"=>5.0, "integer"=>123, "string"=>"a string"}
+      expect(provider.get('values')).to include(object)
+    end
   end
 end

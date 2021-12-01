@@ -120,9 +120,12 @@ gem provides interface to avoid duplicating absolute path
 
 ```ruby
 # You can load subsettings from root object
-db_settings = APP_SETTINGS.load('integrations/database')
+db_settings = APP_SETTINGS.load('integrations/database') # ConsulApplicationSettings::Reader
 db_settings.get(:domain)                  # "194.78.92.19"
 db_settings['user']                       # "app"
+
+#if you try to get subsettings via get - error is raised
+APP_SETTINGS.get('integrations/database') # raise ConsulApplicationSettings::Error
 ``` 
 
 ### Gem Configuration
