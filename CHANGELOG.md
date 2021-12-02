@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [4.0.0-alpha]
+### Breaking Changes
+- When using `settings.get` to retrieve object - exception is raised 
+### New features
+- Introduce resolvers concept
+- Add environment resolver
+- Add erb resolver
+- Add vault alpha resolver
+
 ## [3.0.1]
 ### Fixes
 - Fix exception when preloading settings without consul 
@@ -59,7 +68,8 @@
 - Support deep settings search
 - Support nested configs
 
-[Unreleased]: https://github.com/matic-insurance/consul_application_settings/compare/3.0.1...HEAD
+[Unreleased]: https://github.com/matic-insurance/consul_application_settings/compare/4.0.0-alpha...HEAD
+[4.0.0-alpha]: https://github.com/matic-insurance/consul_application_settings/compare/3.0.1...4.0.0-alpha
 [3.0.1]: https://github.com/matic-insurance/consul_application_settings/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/matic-insurance/consul_application_settings/compare/2.0.0...3.0.0
 [2.1.1]: https://github.com/matic-insurance/consul_application_settings/compare/2.1.0...2.1.1
