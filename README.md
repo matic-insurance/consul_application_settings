@@ -3,26 +3,16 @@
 ![Build Status](https://github.com/matic-insurance/consul_application_settings/workflows/ci/badge.svg?branch=master)
 [![Test Coverage](https://codecov.io/gh/matic-insurance/consul_application_settings/branch/master/graph/badge.svg?token=5E8NA8EE8L)](https://codecov.io/gh/matic-insurance/consul_application_settings)
 
-Gem that simplifies usage of Consul (via [Diplomat gem](https://github.com/WeAreFarmGeek/diplomat)) 
-to host application settings. Gem provides defaults via yaml files and other utilities 
-to simplify storage and control of application with Consul KV storage.
+This gem that simplifies usage of Consul (via [Diplomat gem](https://github.com/WeAreFarmGeek/diplomat)) 
+to host application settings. 
 
-Gem is trying to solve a problem of distributing application settings for local development environment and provide defaults 
-in production before custom value is set inside of consul. 
+Except reading value from Consul the gem also:
+- Fallbacks to YAML if value is missing in consul
+- Resolve actual value from other sources to facilitate overriding via ENV, storing secret values in Vault,  
+  or executing small ERB snippets 
 
-Example use cases:
-
-- One engineer has created a new feature that depend on consul key/value. 
-  
-  How enginner can notify other engineers that they need to set this value in their consul environments?
-
-- DevOps team responsible to configure and maintain deployment. 
-
-  How do they learn (have reference) of what settings and structure application expect? 
-
-Gem reads any particular setting from consul and if it is missing tries to find value in YAML defaults file
-
-**NOTE** Consul is requested every time you query the settings. Defaults YAML file is loaded in memory and is not changing.
+Default values in YAML also can be considered as a way to communicate structure of settings to other engineers.
+Default values also support local settings to allow override on local environment or deployment in production.
 
 ## Installation
 
@@ -39,22 +29,27 @@ gem 'consul_application_settings'
 At the load of application: 
 ```ruby
 ConsulApplicationSettings.configure do |config|
-  # Specify path to the base settings YML. Default: 'config/application_settings.yml' 
-  config.base_file_path = Rails.root.join('config/my_settings.yml')
-  # Specify path to the local settings YML, which overrides the base file. Default: 'config/application_settings.local.yml'
-  config.local_file_path = Rails.root.join('config/my_settings.local.yml')
-  # Specify whether exceprion should be thrown on Consul connection errors. Default: false
+  # Specify path to the base settings YML. Default: 'config/app_settings.yml' 
+  config.base_file_path = Rails.root.join('config/app_settings.yml')
+  # Specify path to the local settings YML, which overrides the base file. Default: 'config/app_settings.local.yml'
+  config.local_file_path = Rails.root.join('config/app_settings.local.yml')
+  # Specify whether exception should be thrown on Consul connection errors. Default: false
   config.disable_consul_connection_errors = true
   # Specify setting providers. Default: [ConsulApplicationSettings::Providers::ConsulPreloaded, ConsulApplicationSettings::Providers::LocalStorage]
   config.settings_providers = [
     ConsulApplicationSettings::Providers::Consul,          
     ConsulApplicationSettings::Providers::LocalStorage          
   ]
+  # Specify how values will be additionally resolved. Default: [ConsulApplicationSettings::Resolvers::Env] 
+  config.value_resolvers = [
+    ConsulApplicationSettings::Resolvers::Erb,
+    ConsulApplicationSettings::Resolvers::Env,
+  ]
 end
 
-APP_SETTINGS = ConsulApplicationSettings.load
 # Specify path to settings both in YML files and Consul
-AUTH_SETTIGNS = ConsulApplicationSettings.load('authentication')
+AUTH_SETTIGNS = ConsulApplicationSettings.load('my_cool_app')
+# Load at root without any prefix: APP_SETTINGS = ConsulApplicationSettings.load
 ```
 
 **NOTE** For rails you can add this code to custom initializer `console_application_settings.rb` in `app/config/initializers`
@@ -65,35 +60,32 @@ AUTH_SETTIGNS = ConsulApplicationSettings.load('authentication')
 
 Assuming your defaults file in repository `config/application_settings.yml` looks like:
 ```yaml
-staging:
-  my_cool_app:
-    app_name: 'MyCoolApp'
-    hostname: 'http://localhost:3001'
-    
-    integrations:
-      database:
-        domain: localhost
-        user: app
-        password: password1234
-      slack:
-        enabled: false
-        webhook_url: 'https://hooks.slack.com/services/XXXXXX/XXXXX/XXXXXXX'
+my_cool_app:
+  app_name: 'MyCoolApp'
+  hostname: 'http://localhost:3001'
+  
+  integrations:
+    database:
+      domain: localhost
+      user: app
+      password: password1234
+    slack:
+      enabled: false
+      webhook_url: 'https://hooks.slack.com/services/XXXXXX/XXXXX/XXXXXXX'
 ```
 
 And consul has following settings
 ```json
 {
-  "staging": {
-    "my_cool_app": {
-     "hostname": "https://mycoolapp.com",
-     "integrations": {
-        "database": {
-          "domain": "194.78.92.19",
-          "password": "*************"
-        },
-        "slack": {
-          "enabled": "true"
-        }
+  "my_cool_app": {
+   "hostname": "https://mycoolapp.com",
+   "integrations": {
+      "database": {
+        "domain": "194.78.92.19",
+        "password": "*************"
+      },
+      "slack": {
+        "enabled": "true"
       }
     }
   }
@@ -126,7 +118,54 @@ db_settings['user']                       # "app"
 
 #if you try to get subsettings via get - error is raised
 APP_SETTINGS.get('integrations/database') # raise ConsulApplicationSettings::Error
-``` 
+```
+
+## Advanced Configurations
+
+### Setting Providers
+Providers controls how and in which order settings are retrieved. 
+When application asks for specific setting - gem retrieves them from every provider in order of configuration
+until one returns not nil value.
+
+Default order for providers is:
+1. `ConsulApplicationSettings::Providers::ConsulPreloaded`
+2. `ConsulApplicationSettings::Providers::LocalStorage`
+
+List of built in providers:
+- `ConsulApplicationSettings::Providers::ConsulPreloaded` - Retrieves all settings from consul on every `.load`
+- `ConsulApplicationSettings::Providers::Consul` - Retrieves setting every time `.get` method is called
+- `ConsulApplicationSettings::Providers::LocalStorage` - Retrieves all settings from local files on every `.load`
+
+Custom provider can be added as long as it support following interface:
+```ruby
+class CustomProvider
+  #constructor
+  def initialize(base_path, config)
+  end
+  
+  # get value by `base_path + '/' + path`
+  def get(path)
+  end
+end
+```
+
+### Resolvers
+Once value is retrieved - it will be additionally processed by resolvers. 
+This allows for additional flexibility like getting values from external sources. 
+While every resolver can be implemented in a form of a provider - one will be limited by the structure of settings, 
+while other system might not be compatible with this.
+
+When value is retrieved - gem finds **first** provider that can resolve value and resolves it. 
+Resolved value is returned to application.
+
+Default list of resolvers:
+- `ConsulApplicationSettings::Resolvers::Env`
+
+List of built in resolvers
+- `ConsulApplicationSettings::Resolvers::Env` - resolves any value by looking up environment variable. 
+  Matching any value that starts with `env://`. Value like `env://TEST_URL` will be resolved as `ENV['TEST_URL']`
+- `ConsulApplicationSettings::Resolvers::Erb` - resolves value by rendering it via ERB. 
+  Matching any value that contains `<%` and `%>` in it. Value like `<%= 2 + 2 %>` will be resolved as `4`
 
 ### Gem Configuration
 You can configure gem with block:
@@ -148,9 +187,7 @@ All Gem configurations
 | local_file_path                  | no       | 'config/application_settings.local.yml' | String  | Path to the file with local settings overriding the base settings            |
 | disable_consul_connection_errors | no       | true                                    | Boolean | Do not raise exception when consul is not available (useful for development) |
 | settings_providers               | no       | Array(Provider)                         | Array   | Specify custom setting provider lists                                        |
-
-### Performance vs Consistency
-To be defined in future iterations on Consul Providers
+| value_resolvers                  | no       | Array(Resolver)                         | Array   | Specify custom value resolvers lists                                         |
 
 ## Development
 
