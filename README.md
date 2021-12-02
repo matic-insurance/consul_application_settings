@@ -191,12 +191,13 @@ All Gem configurations
 
 ## Development
 
-1. [Install Consul](https://www.consul.io/docs/install/index.html)
 1. Run `bin/setup` to install dependencies
-1. Run tests `rspec`
-1. Add new test
-1. Add new code
-1. Go to step 3
+2. Run `docker-compose up` to spin up dependencies (Consul)
+3. Run tests `rspec`
+4. Add new test
+5. Add new code
+6. Go to step 3
+7. Create PR
 
 ## Contributing
 
