@@ -16,10 +16,18 @@ jobs:
       matrix:
         ruby: [ '2.5.x', '2.6.x' ]
     services:
-      redis:
+      consul:
         image: consul:1.6
         ports:
           - '8500:8500'
+#      vault:
+#        image: vault
+#        ports:
+#          - "8200:8200"
+#        cap_add:
+#          - IPC_LOCK
+#        env:
+#          VAULT_DEV_ROOT_TOKEN_ID: root_token
     steps:
       - name: Checkout
         uses: actions/checkout@v1
