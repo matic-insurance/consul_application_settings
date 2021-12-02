@@ -14,12 +14,9 @@ module ConsulApplicationSettings
 
   class << self
     attr_accessor :config
-    attr_accessor :defaults
-    attr_accessor :resolvers
   end
 
   self.config ||= ConsulApplicationSettings::Configuration.new
-  self.resolvers ||= []
 
   def self.configure
     yield(config)

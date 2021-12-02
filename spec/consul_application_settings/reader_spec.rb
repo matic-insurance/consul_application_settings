@@ -90,4 +90,41 @@ RSpec.describe ConsulApplicationSettings::Reader do
       end
     end
   end
+
+  context 'custom resolvers' do
+    let(:reader) { described_class.new('', config) }
+    let(:resolver_class) { class_double(ConsulApplicationSettings::Resolvers::Abstract, new: resolver) }
+    let(:resolver) do
+      resolver = instance_double(ConsulApplicationSettings::Resolvers::Abstract)
+      allow(resolver).to receive(:resolvable?).with('please_resolve', anything).and_return(true)
+      allow(resolver).to receive(:resolvable?).with('NestedStructure', anything).and_return(true)
+      allow(resolver).to receive(:resolvable?).with(anything, 'application/services/consul/domain').and_return(false)
+      allow(resolver).to receive(:resolve).and_return('resolved')
+      resolver
+    end
+
+    before do
+      config.value_resolvers = [resolver_class]
+      set_consul_value('application/key', 'please_resolve')
+    end
+
+    describe '#get' do
+      it 'resolves value from local config' do
+        expect(reader.get('application/name')).to eq('resolved')
+      end
+
+      it 'resolves value from consul' do
+        expect(reader.get('application/key')).to eq('resolved')
+      end
+
+      it 'return original if not resolvable' do
+        expect(reader.get('application/services/consul/domain')).to eq('localhost')
+      end
+
+      it 'returns resolves key with value and path' do
+        reader.get('application/key')
+        expect(resolver).to have_received(:resolve).with('please_resolve', 'application/key')
+      end
+    end
+  end
 end

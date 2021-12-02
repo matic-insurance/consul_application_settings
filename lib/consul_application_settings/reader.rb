@@ -5,15 +5,12 @@ module ConsulApplicationSettings
       @base_path = base_path
       @config = config
       @providers = config.settings_providers.map { |provider| provider.new(base_path, config) }
+      @resolvers = config.value_resolvers.map(&:new)
     end
 
     def get(path)
-      @providers.each do |provider|
-        value = provider.get(path)
-        check_deep_structure(value, path)
-        return value unless value.nil?
-      end
-      nil
+      value = fetch_value(path)
+      resolve_value(value, path)
     end
 
     alias [] get
@@ -30,6 +27,24 @@ module ConsulApplicationSettings
 
       message = "Getting value of complex object at path: '#{path}'. Use #load method to get new scoped instance"
       raise ConsulApplicationSettings::Error, message if value.is_a?(Hash)
+    end
+
+    def fetch_value(path)
+      @providers.each do |provider|
+        value = provider.get(path)
+        check_deep_structure(value, path)
+        return value unless value.nil?
+      end
+      nil
+    end
+
+    def resolve_value(value, path)
+      resolver = @resolvers.detect { |resolver| resolver.resolvable?(value, path) }
+      if resolver
+        resolver.resolve(value, path)
+      else
+        value
+      end
     end
   end
 end

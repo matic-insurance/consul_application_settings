@@ -12,10 +12,6 @@ RSpec.describe ConsulApplicationSettings do
     expect(Diplomat::Kv.get('foo')).to eq('bar')
   end
 
-  it 'has empty backend list' do
-    expect(ConsulApplicationSettings.resolvers).to eq([])
-  end
-
   describe 'integration flows', :default_settings_file do
     describe 'providers priority' do
       it 'reads value from consul' do
