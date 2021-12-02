@@ -25,7 +25,7 @@ RSpec.describe ConsulApplicationSettings::Reader do
       end
 
       it 'raising error when reading tree' do
-        err = /Getting value of complex object at path: 'application\/services'/
+        err = %r{Getting value of complex object at path: 'application/services'}
         expect { reader.get('application/services') }.to raise_error(ConsulApplicationSettings::Error, err)
       end
     end

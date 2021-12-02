@@ -6,10 +6,10 @@ module ConsulApplicationSettings
     DEFAULT_PROVIDERS = [
       ConsulApplicationSettings::Providers::ConsulPreloaded,
       ConsulApplicationSettings::Providers::LocalStorage
-    ]
+    ].freeze
     DEFAULT_RESOLVERS = [
       ConsulApplicationSettings::Resolvers::Env
-    ]
+    ].freeze
     attr_accessor :base_file_path, :local_file_path, :disable_consul_connection_errors,
                   :settings_providers, :value_resolvers
 

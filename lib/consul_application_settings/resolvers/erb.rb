@@ -1,7 +1,8 @@
 module ConsulApplicationSettings
   module Resolvers
+    # Run values through ERB
     class Erb
-      IDENTIFIER = /(<%).*(%>)/
+      IDENTIFIER = /(<%).*(%>)/.freeze
 
       def resolvable?(value, _path)
         return unless value.is_a?(String)
@@ -9,7 +10,7 @@ module ConsulApplicationSettings
         IDENTIFIER.match?(value)
       end
 
-      def resolve(value, path)
+      def resolve(value, _path)
         ERB.new(value.to_s).result
       end
     end

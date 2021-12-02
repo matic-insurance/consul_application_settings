@@ -9,7 +9,7 @@ end
 RSpec.configure do |config|
   config.include(Helpers::Configuration)
 
-  config.before(:each, :default_settings_file) do ||
+  config.before(:each, :default_settings_file) do
     ConsulApplicationSettings.configure do |settings_config|
       settings_config.base_file_path = fixture_path('base_application_settings')
     end
