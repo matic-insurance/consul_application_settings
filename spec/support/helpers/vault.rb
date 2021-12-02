@@ -31,6 +31,6 @@ RSpec.configure do |config|
   end
 
   config.after(:each, :vault) do
-    clear_consul_values
+    clear_vault_values
   end
 end

@@ -2,7 +2,7 @@ require 'openssl'
 require 'vault'
 require 'consul_application_settings/resolvers/vault'
 
-RSpec.xdescribe ConsulApplicationSettings::Resolvers::Vault, :vault do
+RSpec.describe ConsulApplicationSettings::Resolvers::Vault, :vault do
   subject(:resolver) { described_class.new }
   let(:path) { 'app/secret' }
 
