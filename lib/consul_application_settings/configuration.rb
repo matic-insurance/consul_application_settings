@@ -8,6 +8,7 @@ module ConsulApplicationSettings
       ConsulApplicationSettings::Providers::LocalStorage
     ]
     DEFAULT_RESOLVERS = [
+      ConsulApplicationSettings::Resolvers::Env
     ]
     attr_accessor :base_file_path, :local_file_path, :disable_consul_connection_errors,
                   :settings_providers, :value_resolvers
