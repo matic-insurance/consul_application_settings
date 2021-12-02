@@ -26,6 +26,22 @@ RSpec.describe ConsulApplicationSettings do
       end
     end
 
+    describe 'resolvers' do
+      it 'resolves value using Env by default' do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('TEST_DOMAIN').and_return('my.host')
+        set_consul_value('application/domain', 'env://TEST_DOMAIN')
+        settings = ConsulApplicationSettings.load
+        expect(settings.get('application/domain')).to eq('my.host')
+      end
+
+      it 'ignores Erb by default' do
+        set_consul_value('application/domain', '<%= 2 + 2 %>')
+        settings = ConsulApplicationSettings.load
+        expect(settings.get('application/domain')).to eq('<%= 2 + 2 %>')
+      end
+    end
+
     describe 'path operations' do
       it 'supports path in load' do
         settings = ConsulApplicationSettings.load('application/services')
