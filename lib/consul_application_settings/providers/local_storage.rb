@@ -19,7 +19,7 @@ module ConsulApplicationSettings
         base_yml = read_yml(base_file_path)
         local_yml = read_yml(local_file_path)
         DeepMerge.deep_merge!(local_yml, base_yml, preserve_unmergeables: false, overwrite_arrays: true,
-                              merge_nil_values: true)
+                                                   merge_nil_values: true)
       end
 
       def base_file_path

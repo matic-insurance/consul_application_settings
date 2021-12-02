@@ -16,7 +16,7 @@ module ConsulApplicationSettings
       def get_from_consul(path)
         Diplomat::Kv.get(path, recurse: true)
       rescue Diplomat::KeyNotFound
-        return nil
+        nil
       rescue SystemCallError, Faraday::ConnectionFailed, Diplomat::PathNotFound => e
         raise e unless @config.disable_consul_connection_errors
       end
@@ -24,7 +24,7 @@ module ConsulApplicationSettings
       def resolve_tree_response(value, full_path)
         return value unless value.is_a?(Array)
 
-        value.each {|item| item[:key] = item[:key].delete_prefix("#{full_path}/")}
+        value.each { |item| item[:key] = item[:key].delete_prefix("#{full_path}/") }
         value
       end
     end

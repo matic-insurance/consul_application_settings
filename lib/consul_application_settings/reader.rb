@@ -1,5 +1,5 @@
 module ConsulApplicationSettings
-  # Provides access to settings stored in Consul or in file system
+  # Orchestrates fetching values from provider and resolving them
   class Reader
     def initialize(base_path, config)
       @base_path = base_path
@@ -39,7 +39,7 @@ module ConsulApplicationSettings
     end
 
     def resolve_value(value, path)
-      resolver = @resolvers.detect { |resolver| resolver.resolvable?(value, path) }
+      resolver = @resolvers.detect { |r| r.resolvable?(value, path) }
       if resolver
         resolver.resolve(value, path)
       else

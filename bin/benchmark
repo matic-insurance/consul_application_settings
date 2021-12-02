@@ -54,7 +54,6 @@ puts 'Benchmark without consul agent'
 kill_consul
 benchmark_gem
 
-
 puts '-' * 80
 puts 'Benchmark with consul agent running'
 start_consul

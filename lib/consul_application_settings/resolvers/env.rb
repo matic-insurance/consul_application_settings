@@ -1,7 +1,8 @@
 module ConsulApplicationSettings
   module Resolvers
+    # Resolve values in environment
     class Env
-      IDENTIFIER = 'env://'
+      IDENTIFIER = 'env://'.freeze
 
       def resolvable?(value, _path)
         return unless value.respond_to?(:start_with?)

@@ -43,7 +43,7 @@ module ConsulApplicationSettings
           item[:key].split('/').reverse.reduce(value) { |h, v| { v => h } }
         end
         data_h.reduce({}) do |dest, source|
-          DeepMerge.deep_merge!(source, dest, { preserve_unmergeables: true })
+          DeepMerge.deep_merge!(source, dest, preserve_unmergeables: true)
         end
       end
     end

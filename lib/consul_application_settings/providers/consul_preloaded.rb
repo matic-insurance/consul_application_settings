@@ -4,7 +4,7 @@ module ConsulApplicationSettings
     class ConsulPreloaded < Abstract
       def initialize(base_path, config)
         super
-        @data = get_all_from_consul
+        @data = read_all_from_consul
       end
 
       def get(path)
@@ -15,12 +15,13 @@ module ConsulApplicationSettings
 
       protected
 
-      def get_all_from_consul
+      def read_all_from_consul
         Diplomat::Kv.get_all(@base_path, convert_to_hash: true)
       rescue Diplomat::KeyNotFound
         {}
       rescue SystemCallError, Faraday::ConnectionFailed, Diplomat::PathNotFound => e
         raise e unless @config.disable_consul_connection_errors
+
         {}
       end
 

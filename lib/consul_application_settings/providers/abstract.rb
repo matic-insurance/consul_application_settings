@@ -3,10 +3,11 @@ module ConsulApplicationSettings
     # Abstract class with basic functionality
     class Abstract
       def initialize(base_path, config)
-        @base_path, @config = base_path, config
+        @base_path = base_path
+        @config = config
       end
 
-      def get(path)
+      def get(_path)
         raise NotImplementedError
       end
 
