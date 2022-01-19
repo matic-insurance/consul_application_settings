@@ -39,4 +39,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop', '~> 0.66'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.32.0'
   spec.add_development_dependency 'simplecov', '~> 0.16'
+
+  spec.post_install_message = <<~MESSAGE
+    !    The 'consul_application_settings' gem has been deprecated and has been replaced by 'settings_reader'.
+    !    See: https://rubygems.org/gems/settings_reader
+    !    And: https://github.com/matic-insurance/settings_reader
+  MESSAGE
 end
