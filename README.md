@@ -1,5 +1,9 @@
 # ConsulApplicationSettings
 
+## Gem is Deprecated in favor of [SettingsReader](https://github.com/matic-insurance/settings_reader)
+This gem is deprecated and all functionality has been moved to `SettingsReader`
+See More: https://github.com/matic-insurance/settings_reader 
+
 ![Build Status](https://github.com/matic-insurance/consul_application_settings/workflows/ci/badge.svg?branch=master)
 [![Test Coverage](https://codecov.io/gh/matic-insurance/consul_application_settings/branch/master/graph/badge.svg?token=5E8NA8EE8L)](https://codecov.io/gh/matic-insurance/consul_application_settings)
 
