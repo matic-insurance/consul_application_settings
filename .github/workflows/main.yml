@@ -20,13 +20,6 @@ jobs:
         image: consul:1.6
         ports:
           - '8500:8500'
-      vault:
-        image: vault
-        ports:
-          - "8200:8200"
-        env:
-          VAULT_DEV_ROOT_TOKEN_ID: root_token
-          SKIP_SETCAP: true
     steps:
       - name: Checkout
         uses: actions/checkout@v1
